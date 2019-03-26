@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Redis作为一个开源的、优秀的、基于内存的key-value缓存及持久化存储解决方案，同时也提供了复制功能，本文主要介绍Redis的持久化功能和复制原理。 redis持久化redis数据的操作在内存中完成，一旦服务器进程退出，数据就会丢失。为了解决这个问题，可将内存中的数据保存到磁盘中，避免数据的丢失，在重启服务时加载数据，实现持久化。Redis提供了两种持久化的方案：  RDB持久化 以指定的">
+<meta name="keywords" content="NoSQL,Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis持久化和复制">
+<meta property="og:url" content="https://nova-he.github.io/2019/03/26/redis持久化和复制/index.html">
+<meta property="og:site_name" content="Nova&#39;s Blog">
+<meta property="og:description" content="Redis作为一个开源的、优秀的、基于内存的key-value缓存及持久化存储解决方案，同时也提供了复制功能，本文主要介绍Redis的持久化功能和复制原理。 redis持久化redis数据的操作在内存中完成，一旦服务器进程退出，数据就会丢失。为了解决这个问题，可将内存中的数据保存到磁盘中，避免数据的丢失，在重启服务时加载数据，实现持久化。Redis提供了两种持久化的方案：  RDB持久化 以指定的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="hhttps://ws1.sinaimg.cn/large/006v3NJegy1g1gk19dsu5j30hs0bomzi.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gk1ghii0j30mi0jydjf.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gk1od2p7j30xc0h2wjj.jpg">
+<meta property="og:updated_time" content="2019-03-26T14:15:39.685Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis持久化和复制">
+<meta name="twitter:description" content="Redis作为一个开源的、优秀的、基于内存的key-value缓存及持久化存储解决方案，同时也提供了复制功能，本文主要介绍Redis的持久化功能和复制原理。 redis持久化redis数据的操作在内存中完成，一旦服务器进程退出，数据就会丢失。为了解决这个问题，可将内存中的数据保存到磁盘中，避免数据的丢失，在重启服务时加载数据，实现持久化。Redis提供了两种持久化的方案：  RDB持久化 以指定的">
+<meta name="twitter:image" content="hhttps://ws1.sinaimg.cn/large/006v3NJegy1g1gk19dsu5j30hs0bomzi.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="https://nova-he.github.io/2019/03/26/redis持久化和复制/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Redis持久化和复制 | Nova's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Nova's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">时光荏苒，不在年少</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Navigationsleiste an/ausschalten">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Startseite</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Schlagwörter</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Kategorien</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archiv</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Suche</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Suche..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+  
+
+  
+
+  <a href="https://github.com/Nova-He" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2019/03/26/redis持久化和复制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Nova">
+      <meta itemprop="description" content="时光荏苒，不在年少">
+      <meta itemprop="image" content="/images/mapleleaf.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nova's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Redis持久化和复制
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+
+              
+                
+              
+
+              <time title="Erstellt: 2019-03-26 22:56:28 / Geändert am: 22:15:39" itemprop="dateCreated datePublished" datetime="2019-03-26T22:56:28+08:00">2019-03-26</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">in</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/NoSQL/" itemprop="url" rel="index"><span itemprop="name">NoSQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+            <span id="/2019/03/26/redis持久化和复制/" class="leancloud_visitors" data-flag-title="Redis持久化和复制">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Aufrufe: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Redis作为一个开源的、优秀的、基于内存的<code>key-value</code>缓存及持久化存储解决方案，同时也提供了复制功能，本文主要介绍Redis的持久化功能和复制原理。</p>
+<h2 id="redis持久化"><a href="#redis持久化" class="headerlink" title="redis持久化"></a>redis持久化</h2><p>redis数据的操作在内存中完成，一旦服务器进程退出，数据就会丢失。为了解决这个问题，可将内存中的数据保存到磁盘中，避免数据的丢失，在重启服务时加载数据，实现持久化。Redis提供了两种持久化的方案：</p>
+<ul>
+<li><code>RDB</code>持久化 以指定的时间间隔执行数据集的即时点(point-in-time)快照。</li>
+<li><code>AOF</code>持久化 在服务端记录每次收到的写操作，在服务器启动时会重放，以重建原始数据集。</li>
+</ul>
+<a id="more"></a>
+<h3 id="RDB持久化"><a href="#RDB持久化" class="headerlink" title="RDB持久化"></a>RDB持久化</h3><p>RDB持久化通过类似周期性快照的方式<code>snapshot</code>，写操作存储为二进制文件。</p>
+<h4 id="RDB的创建与载入"><a href="#RDB的创建与载入" class="headerlink" title="RDB的创建与载入"></a>RDB的创建与载入</h4><p>客户端显式使用<code>save</code>或<code>bgsave</code>命令启动快照保存机制：</p>
+<ul>
+<li><code>SAVE</code>(同步) 阻塞redis的服务器进程，直到RDB文件被创建完毕。</li>
+<li><code>BGSAVE</code>(异步) 派生(fork)一个子进程来创建新的RDB文件，记录接收到BGSAVE当时的数据库状态，进   程继续处理接收到的命令，子进程完成文件的创建之后，会发送信号给父进程，而与此同时，父进程处理     命令的同时，通过轮询来接收子进程的信号。</li>
+</ul>
+<h4 id="自动保存间隔"><a href="#自动保存间隔" class="headerlink" title="自动保存间隔"></a>自动保存间隔</h4><p><code>BGSAVE</code>可以在不阻塞主进程的情况下完成数据的备份。可以通过<code>redis.conf</code>中设置多个自动保存条件，只要有一个条件被满足，服务器就会执行<code>BGSAVE</code>命令。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># redis默认配置策略，需要关闭时配置：SAVE &quot;&quot;</span><br><span class="line">SAVE 900 1      # 服务器在900秒之内被修改了1次</span><br><span class="line">SAVE 300 10     # 服务器在300秒之内被修改了10次</span><br><span class="line">SAVE 60 10000   # 服务器在60秒之内被修改了10000次</span><br><span class="line"></span><br><span class="line"># 其他选项</span><br><span class="line">stop-writes-on-bgsave-error yes  # 在数据同步有错时是否通知操作</span><br><span class="line">rdbcompression yes               # 数据是否压缩</span><br><span class="line">rdbchecksum yes                  # 是否校验</span><br><span class="line">dbfilename dump.rdb              # 文件名称</span><br><span class="line">dir /var/lib/redis	             # 文件存放路径</span><br></pre></td></tr></table></figure></p>
+<p>RDB文件的载入一般情况是自动的，redis服务器启动的时候，redis服务器再启动的时候如果检测到RDB文件的存在，那么redis会自动载入这个文件。</p>
+<p>如果服务器开启了AOF持久化，那么服务器会优先使用AOF文件来还原数据库状态。</p>
+<p>RDB是通过保存键值对来记录数据库状态的，采用<code>copy on write</code>的模式，每次都是全量的备份。</p>
+<h3 id="AOF持久化"><a href="#AOF持久化" class="headerlink" title="AOF持久化"></a>AOF持久化</h3><h4 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h4><p>每次Redis收到修改数据集的命令，将会被追加到 AOF文件中。当你重启 Redis 的时候，就会重放(re-play)AOF文件来重建数据库状态。</p>
+<p>可以想象，写操作不断执行的时候 AOF文件会越来越大。例如，如果你增加一个计数器 100 次，你的数据集里只会有一个键存储这最终值，但是却有 100 条记录在 AOF 中。其中 99 条记录在重建当前状态时是不需要的。<br>于是 Redis 支持一个<code>日志重写</code>的机制：在后台重建AOF而不影响服务客户端。每当你发送BGREWRITEAOF时，Redis将会写入一个新的AOF文件，包含重建当前内存中数据集所需的最短命令序列(Redis 2.2的AOF，需要不时的运行 BGREWRITEAOF 命令)。</p>
+<p><code>日志重写</code>采用了和快照一样的写时复制机制。过程如下：</p>
+<ul>
+<li>Redis调用fork()创建子进程。</li>
+<li>子进程开始向一个临时文件中写 AOF。</li>
+<li>父进程在一个内存缓冲区中积累新的变更(同时将新的变更写入旧的 AOF 文件，所以即使重写失败我们也安全)。</li>
+<li>当子进程完成重写文件，父进程收到一个信号，追加内存缓冲区到子进程创建的文件末尾。</li>
+<li>Redis 自动重命名旧文件为新的AOF文件，然后开始追加新数据到新文件。</li>
+</ul>
+<h4 id="相关选项"><a href="#相关选项" class="headerlink" title="相关选项"></a>相关选项</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#AOF 和 RDB 持久化方式可以同时启动并且无冲突。  </span><br><span class="line">#如果AOF开启，启动redis时会优先加载AOF文件，这些文件能够提供更好的保证。 </span><br><span class="line">appendonly yes</span><br><span class="line"></span><br><span class="line"># 只增文件的文件名称。（默认是appendonly.aof）  </span><br><span class="line"># appendfilename appendonly.aof </span><br><span class="line"></span><br><span class="line">#redis支持三种不同的写入方式：  </span><br><span class="line">#  </span><br><span class="line"># no:不调用，之等待操作系统来清空缓冲区当操作系统要输出数据时。很快。  </span><br><span class="line"># always: 每次更新数据都写入仅增日志文件。慢，但是最安全。</span><br><span class="line"># everysec: 每秒调用一次，折中方案。</span><br><span class="line">appendfsync everysec  </span><br><span class="line"></span><br><span class="line"># 设置为yes表示rewrite期间对新写操作不fsync,暂时存在内存中,等rewrite完成后再写入.官方文档建议如果你有特殊的情况可以配置为&apos;yes&apos;。但是配置为&apos;no&apos;是最为安全的选择。</span><br><span class="line">no-appendfsync-on-rewrite no  </span><br><span class="line"></span><br><span class="line"># 自动重写只增文件。  </span><br><span class="line"># redis可以自动盲从的调用‘BGREWRITEAOF’来重写日志文件，如果日志文件增长了指定的百分比。  </span><br><span class="line"># 当前AOF文件大小是上次日志重写得到AOF文件大小的二倍时，自动启动新的日志重写过程。</span><br><span class="line">auto-aof-rewrite-percentage 100  </span><br><span class="line"># 当前AOF文件启动新的日志重写过程的最小值，避免刚刚启动Reids时由于文件尺寸较小导致频繁的重写。</span><br><span class="line">auto-aof-rewrite-min-size 64mb</span><br></pre></td></tr></table></figure>
+<h3 id="AOF和RDB-的相互作用"><a href="#AOF和RDB-的相互作用" class="headerlink" title="AOF和RDB 的相互作用"></a>AOF和RDB 的相互作用</h3><p>Redis 2.4 及以后的版本中，不允许在 RDB 快照操作运行过程中触发 AOF 重写，也不允许在 AOF 重写运行过程中运行 BGSAVE。这防止了两个 Redis 后台进程同时对磁盘进行繁重的 IO 操作。当在快照运行的过程中，用户使用 BGREWRITEAOF 显式请求日志重写操作的话，服务器会答复一个 OK 状态码，告诉用户这个操作已经被安排调度，等到快照完成时开始重写。</p>
+<p>Redis 在同时开启 AOF 和 RDB 的情况下重启，会使用 AOF 文件来重建原始数据集，因为通常 AOF 文件是保存数据最完整的。</p>
+<hr>
+<h2 id="redis复制"><a href="#redis复制" class="headerlink" title="redis复制"></a>redis复制</h2><p>复制技术使得数据库的读写操作可以分散在运行于不同CPU之上的独立服务器上，同时也实现数据冗余。<br>Redis 的复制 (replication) 是一种使用和配置起来非常简单的主从(master-slave)复制，允许 Redis 从服务器成为主服务器的精确副本。</p>
+<h3 id="复制的实现"><a href="#复制的实现" class="headerlink" title="复制的实现"></a>复制的实现</h3><p>redis支持一台物理机启动多个服务以实现，本次实例将在一台物理机上实现：<br>启动master实例：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># master节点</span><br><span class="line">/usr/bin/redis-server --port 8000 &amp;</span><br><span class="line"></span><br><span class="line"># slave 节点</span><br><span class="line">/usr/bin/redis-server --port 8001 --slaveof 127.0.0.1 8000 &amp;</span><br><span class="line">/usr/bin/redis-server --port 8002 --slaveof 127.0.0.1 8000 &amp;</span><br><span class="line">/usr/bin/redis-server --port 8003 --slaveof 127.0.0.1 8000 &amp;</span><br><span class="line"></span><br><span class="line"># 查看端口</span><br><span class="line">ss -tnl </span><br><span class="line"></span><br><span class="line">LISTEN      0      128       *:8000                  *:*                  </span><br><span class="line">LISTEN      0      128       *:8001                  *:*                  </span><br><span class="line">LISTEN      0      128       *:8002                  *:*                  </span><br><span class="line">LISTEN      0      128       *:8003                  *:*</span><br></pre></td></tr></table></figure></p>
+<p>这样，我们就成功的启动了四台Redis实例，master实例的服务端口为8000，R1、R2、R3的服务端口分别为8001、8002、8003，集群图如下：</p>
+<p><img src="hhttps://ws1.sinaimg.cn/large/006v3NJegy1g1gk19dsu5j30hs0bomzi.jpg" alt="enter description here"></p>
+<h3 id="复制过程"><a href="#复制过程" class="headerlink" title="复制过程"></a>复制过程</h3><p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gk1ghii0j30mi0jydjf.jpg" alt="enter description here"></p>
+<p> 上图为Redis复制工作过程：</p>
+<ul>
+<li>slave向master发送sync命令。</li>
+<li>master开启子进程来讲dataset写入rdb文件，同时将子进程完成之前接收到的写命令缓存起来。</li>
+<li>子进程写完，父进程得知，开始将RDB文件发送给slave。</li>
+<li>master发送完RDB文件，将缓存的命令也发给slave。</li>
+<li>master增量的把写命令发给slave。</li>
+</ul>
+<p>同步是通过命令流完成的，和Redis的协议一样的格式。<br>用telnet 连接上Redis 的端口，然后发送 SYNC 命令，master会回应消息：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@node3 ~]# telnet  127.0.0.1 8000 </span><br><span class="line">Trying 127.0.0.1...</span><br><span class="line">Connected to 127.0.0.1.</span><br><span class="line">Escape character is &apos;^]&apos;.</span><br><span class="line">SYNC            # 发送SYNC命令</span><br><span class="line">$77</span><br><span class="line">REDIS0007	redis-ver3.2.10</span><br><span class="line">redis-bits????e?Lused-mem?X?\eRXshell*1</span><br><span class="line">$4</span><br><span class="line">PING</span><br></pre></td></tr></table></figure></p>
+<h3 id="部分重同步"><a href="#部分重同步" class="headerlink" title="部分重同步"></a>部分重同步</h3><p>当主从链路由于某些原因断开时，从服务器可以自动重连。如果主服务器收到多个并发的从服务器的同步请求，只会执行一个后台保存来服务所有从服务器。<br>从 Redis 2.8 开始，在复制链接断开后，在从服务器再次连接主服务器时可以继续复制过程，而不需要一次完整的重同步。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gk1od2p7j30xc0h2wjj.jpg" alt="enter description here"></p>
+<p>master除了备份RDB文件之外还会维护者一个环形队列，以及环形队列的写索引和slave同步的全局offset，环形队列用于存储最新的操作数据，当slave和maste断开重连之后，会把slave维护的offset，也就是上一次同步到哪里的这个值告诉master，同时会告诉master上次和当前slave连接的master的runid，满足下面两个条件，Redis不会全量复制：</p>
+<ul>
+<li>slave传递的run id和master的run id一致。</li>
+<li>master在环形队列上可以找到对应的offset值。</li>
+</ul>
+<p>复制是由psync命令实现的，slave可以通过psync命令来让Redis进行增量复制，当然最终是否能够增量复制取决于环形队列的大小和slave的断线时间长短和重连的这个master是否是之前的master。</p>
+<p>配置相关参数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line">repl-backlog-size 1mb      # 环形队列大小</span><br><span class="line">repl-backlog-ttl 3600      # 没有slave需要同步的时候，多久可以释放环形队列</span><br><span class="line">repo-diskless-sync no      # 否开启Diskless Replication(免持久化)的开关配置</span><br><span class="line">repl-diskless-sync-delay 5 # 指定复制开始的时间延迟</span><br></pre></td></tr></table></figure></p>
+<h3 id="从服务器只读"><a href="#从服务器只读" class="headerlink" title="从服务器只读"></a>从服务器只读</h3><p>从 Redis 2.6 开始，从服务器支持默认开启的只读模式。这个行为由 redis.conf 文件中的 slave-read-only 选项控制，可以在运行时使用 CONFIG SET 来开启和关闭。<br>这种特性不能意味着暴露从服务器到互联网，因为诸如 DEBUG 和 CONFIG 这样的管理命令等仍可用。但是可以通过在 redis.conf 中使用 rename-command 指令来禁止命令。<br>这些写入的数据会在从服务器和主服务器重同步时，或者从服务器重启时被丢弃，还是有一些存储一些短暂的数据到可写的从服务器的合理场景。<br>比如：主服务器故障，需要其他节点作为主服务器时。</p>
+<h3 id="半同步复制"><a href="#半同步复制" class="headerlink" title="半同步复制"></a>半同步复制</h3><p>从 Redis 2.8 开始，可以设置 Redis 主服务器在当前至少拥有 N 个从服务器的连接的情况下，才能接受写请求。<br>和MySQL复制策略有点类似，Redis复制本身是异步的，但也提供了半同步的复制策略，半同步复制策略在Redis复制中的语义是这样的：</p>
+<ul>
+<li>Redis 从服务器每秒种 ping 主服务器，上报处理完的复制流的数据量。</li>
+<li>Redis 主服务器记录上一次从每一个从服务收到 ping 的时间。</li>
+<li>用户可以配置最小从服务器数量，每台从服务器拥有一个不大于最大秒数的滞后(lag)。</li>
+</ul>
+<p>这个特性有两个配置参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">min-slaves-to-write &lt;number of slaves&gt;   # N的数量</span><br><span class="line">min-slaves-max-lag &lt;number of seconds&gt;   # 指定时间间隔</span><br></pre></td></tr></table></figure></p>
+<p>如果有至少<code>N</code>个小于<code>M</code>秒滞后的从服务器，写请求才会被接受。<br>你可能会认为这个像 <code>CAP</code> 理论中较宽松版本的<code>C</code>，不能保证指定写的一致性，但是至少数据丢失的时间窗口被限制在一个指定的秒数内。<br>如果条件不满足，主服务器会返回一个错误，并且不会接受写请求。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>马哥运维笔记<br><a href="http://blog.jobbole.com/101678/" target="_blank" rel="noopener">浅析 Redis 复制</a><br><a href="https://redis.io/topics/persistence" target="_blank" rel="noopener">redis官方文档</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NoSQL/" rel="tag"># NoSQL</a>
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/26/raid/" rel="next" title="RIAD工作原理">
+                <i class="fa fa-chevron-left"></i> RIAD工作原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/26/samba/" rel="prev" title="Samba文件共享">
+                Samba文件共享 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/mapleleaf.jpg" alt="Nova">
+            
+              <p class="site-author-name" itemprop="name">Nova</p>
+              <div class="site-description motion-element" itemprop="description">时光荏苒，不在年少</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">31</span>
+                    <span class="site-state-item-name">Artikel</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">15</span>
+                    <span class="site-state-item-name">Kategorien</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">29</span>
+                    <span class="site-state-item-name">schlagwörter</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://nova-he.github.io" title="GitHub &rarr; https://nova-he.github.io"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#redis持久化"><span class="nav-number">1.</span> <span class="nav-text">redis持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB持久化"><span class="nav-number">1.1.</span> <span class="nav-text">RDB持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RDB的创建与载入"><span class="nav-number">1.1.1.</span> <span class="nav-text">RDB的创建与载入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自动保存间隔"><span class="nav-number">1.1.2.</span> <span class="nav-text">自动保存间隔</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF持久化"><span class="nav-number">1.2.</span> <span class="nav-text">AOF持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实现过程"><span class="nav-number">1.2.1.</span> <span class="nav-text">实现过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#相关选项"><span class="nav-number">1.2.2.</span> <span class="nav-text">相关选项</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF和RDB-的相互作用"><span class="nav-number">1.3.</span> <span class="nav-text">AOF和RDB 的相互作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis复制"><span class="nav-number">2.</span> <span class="nav-text">redis复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#复制的实现"><span class="nav-number">2.1.</span> <span class="nav-text">复制的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制过程"><span class="nav-number">2.2.</span> <span class="nav-text">复制过程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部分重同步"><span class="nav-number">2.3.</span> <span class="nav-text">部分重同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从服务器只读"><span class="nav-number">2.4.</span> <span class="nav-text">从服务器只读</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#半同步复制"><span class="nav-number">2.5.</span> <span class="nav-text">半同步复制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Nova</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Design – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v7.0.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1000');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({ time: { '__op': 'Increment', 'amount': 1 } }))
+            
+              .done(function() {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.time + 1);
+              })
+            
+              .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .fail(function ({ responseJSON }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'SYeq2iIs3l6BQ9IJzmjqDdSC-gzGzoHsz')
+        .done(function({ api_server }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'SYeq2iIs3l6BQ9IJzmjqDdSC-gzGzoHsz',
+                'X-LC-Key': 'a1Slzm2UnH52mws9fPzOK0oF',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+          
+            addCount(Counter);
+          
+        });
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
