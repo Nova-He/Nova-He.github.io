@@ -96,23 +96,29 @@
 
 
 
-  <meta name="description" content="时光荏苒，不在年少">
+  <meta name="description" content="Kubernetes是基于Google内部的容器编排系统Borg的开源实现，早在很久以前，Google就开始使用Borg容器编排系统承载Google的全部业务。在Docker容器之上，它使用label和pod的概念来将容器换分为逻辑单元。Pods是同地协作（co-located）容器的集合，这些容器被共同部署和调度，形成了一个服务，这是Kubernetes和其他容器编排系统的只要区别，这种逻辑概念">
+<meta name="keywords" content="Kubernetes">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Nova&#39;s Blog">
-<meta property="og:url" content="https://nova-he.github.io/tags/Kubernetes/index.html">
+<meta property="og:title" content="Kubernetes基本概念">
+<meta property="og:url" content="https://nova-he.github.io/Kubernetes_concepts.html">
 <meta property="og:site_name" content="Nova&#39;s Blog">
-<meta property="og:description" content="时光荏苒，不在年少">
+<meta property="og:description" content="Kubernetes是基于Google内部的容器编排系统Borg的开源实现，早在很久以前，Google就开始使用Borg容器编排系统承载Google的全部业务。在Docker容器之上，它使用label和pod的概念来将容器换分为逻辑单元。Pods是同地协作（co-located）容器的集合，这些容器被共同部署和调度，形成了一个服务，这是Kubernetes和其他容器编排系统的只要区别，这种逻辑概念">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1h3oaju37j30cl0bijrs.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1h3omw4obj30eg0edabb.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1h3oykwodj30qo0k00te.jpg">
+<meta property="og:updated_time" content="2019-03-27T01:43:30.132Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Nova&#39;s Blog">
-<meta name="twitter:description" content="时光荏苒，不在年少">
+<meta name="twitter:title" content="Kubernetes基本概念">
+<meta name="twitter:description" content="Kubernetes是基于Google内部的容器编排系统Borg的开源实现，早在很久以前，Google就开始使用Borg容器编排系统承载Google的全部业务。在Docker容器之上，它使用label和pod的概念来将容器换分为逻辑单元。Pods是同地协作（co-located）容器的集合，这些容器被共同部署和调度，形成了一个服务，这是Kubernetes和其他容器编排系统的只要区别，这种逻辑概念">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1h3oaju37j30cl0bijrs.jpg">
 
 
 
 
 
 
-  <link rel="canonical" href="https://nova-he.github.io/tags/Kubernetes/">
+  <link rel="canonical" href="https://nova-he.github.io/Kubernetes_concepts.html">
 
 
 
@@ -122,7 +128,7 @@
   };
 </script>
 
-  <title>Tag: Kubernetes | Nova's Blog</title>
+  <title>Kubernetes基本概念 | Nova's Blog</title>
   
 
 
@@ -170,7 +176,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -229,7 +235,7 @@
         
         
           
-          <li class="menu-item menu-item-tags menu-item-active">
+          <li class="menu-item menu-item-tags">
 
     
     
@@ -366,57 +372,134 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block tag">
+  <div id="posts" class="posts-expand">
+    
+    
+    
+    <div class="post-block page">
+      <header class="post-header">
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Kubernetes<small>Tag</small>
-        </h1>
-      </div>
+<h1 class="post-title" itemprop="name headline">Kubernetes基本概念
+
+</h1>
+
+<div class="post-meta">
+  
+  
+
+
+
+</div>
+
+</header>
 
       
+      
+      
+      <div class="post-body">
         
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
         
-          <a class="post-title-link" href="/2019/03/26/Kubernetes_concepts/" itemprop="url">
-            
-              <span itemprop="name">Kubernetes基本概念</span>
-            
-          </a>
-        
-      </h2>
+          <p>Kubernetes是基于Google内部的容器编排系统Borg的开源实现，早在很久以前，Google就开始使用Borg容器编排系统承载Google的全部业务。在Docker容器之上，它使用label和pod的概念来将容器换分为逻辑单元。Pods是同地协作（co-located）容器的集合，这些容器被共同部署和调度，形成了一个服务，这是Kubernetes和其他容器编排系统的只要区别，这种逻辑概念在现在验证来看确实是最佳实践。下面我们从Kubernetes基本概念入手，开始Kubernetes之旅。</p>
+<h2 id="1-1-Master"><a href="#1-1-Master" class="headerlink" title="1.1 Master"></a>1.1 Master</h2><p>在Kubernetes集群中和大多数集群一样，需要一个强大的领导者，来管理和控制集群，这个管理者就是Master。在Master上运行的几个关键的进程，分工合作，管理着集群：</p>
+<ul>
+<li><p>Kubernetes API  Server （kube-apiserver）提供了HTTP Restful 接口风格的关键服务进程，是Kubernetes中资源的增、删、改、查操作的统一入口，集群管理kubectl直接和API Server交互。</p>
+</li>
+<li><p>Kubernetes Controller Mananger （kube-controller-manager）如果说API  Server 是负责前台工作的话，那Controller Manager则是负责后台的。当用户要创建一个Pod时，kubectl 先跟API Server交互创建，当Pod创建完成后，APIServer的任务就算完成了，而后期Pod的状态和我们所期望的状态就需要Controller Mananger去保证了。</p>
+</li>
+<li><p>Kubernetes Scheduler （kube-scheduler） scheduler 的工作很明确，负责把Pod根据调度到合适的Node上，如果把scheduler 比作一个黑匣子，输入Pod和Node组成的列表，输出的是Pod对应Node的列表，即Pod被部署到哪个Node上，Kubernetes提供了调度算法，同时保留了用户自定义算法的接口。</p>
+<p>在Kubernetes服务之外，还要将所有资源对象的数据保存到etcd中。</p>
+<a id="more"></a>
+<h2 id="1-2-Node"><a href="#1-2-Node" class="headerlink" title="1.2 Node"></a>1.2 Node</h2></li>
+</ul>
+<p>除了Mater节点外，当然还要有集群中真正干活的了，这就是Node。通常也叫它负载节点，Node负责容器运行，Master节点负责管理控制，当某个Node宕机时，其上面的应用会被调度到其他Node上，实现HA。</p>
+<p>Node上也运行着一些关键进程：</p>
+<ul>
+<li><p>Kubelet kubelet是Master 在每个Node节点上的agent，负责Node节点上的Pod的创建、启动，它负责维护和管理该Node上面的所有容器，但是如果容器不是通过Kubernetes创建的，它并不会管理。本质上，它负责使Pod得运行状态与期望的状态一致。</p>
+</li>
+<li><p>Kube-proxy 该模块实现了Kubernetes中的服务发现和反向代理功能。反向代理：kube-proxy支持TCP和UDP连接转发，默认基于Round Robin算法将客户端流量转发到与service对应的一组后端Pod。服务发现：kube-proxy使用etcd的watch机制，监控集群中service和endpoint对象数据的动态变化，并且维护一个service到endpoint的映射关系，从而保证了后端Pod重启的IP变化不会对访问者造成影响。另外kube-proxy还支持session affinity来保证session的一致性。</p>
+</li>
+<li><p>Container Runtime 容器运行时，Kubernetes采用插件式的设计风格，后端不依赖于具体的容器引擎，Kubernetes目前支持常见的容器引擎rkt和docker，在未来可能绕过docker中间层，直接支持Container Runtime：<a href="https://containerd.io/" target="_blank" rel="noopener">containerd</a>，可能带来的是性能上的提升，值得期待。</p>
+<p>​</p>
+<p>至此，我们可以很清晰认识Kubernetes物理架构图：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1h3oaju37j30cl0bijrs.jpg" alt="kubernetes_Strcuture"></p>
+<p>​</p>
+<p>下面就来介绍 Kubernetes 中资源对象：</p>
+<h2 id="2-Pod"><a href="#2-Pod" class="headerlink" title="2. Pod"></a>2. Pod</h2><p>Pod是kubernetes 中重要的概念，基本的操作单位，如果把Kubernetes类比一个云操作系统的话，那Pod就是运行在集群中的一个”进程“。Pod是容器的集合，它把应用装入到到一组相关容器中，容器间共享资源，拥有在一个名称空间中唯一的IP，以及维持容器运行的其他资源，而容器更像是进程中的“线程”。</p>
+<p>在Kubernetes应用部署时，以Pod为一个部署单元，应用程序的单个实例可能由单个容器组成，也可能由一些紧密相关的容器组成。</p>
+<p>下图是一个实例：</p>
+<p>​</p>
+<p>​</p>
+<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1h3omw4obj30eg0edabb.jpg" alt="pod"></p>
+<p>​</p>
+</li>
+</ul>
+<p>包含文件读取和一个Web服务器多容器的一个Pod，该服务器和其他应用，使用一个持久卷进行容器之间的共享存储</p>
+<p><strong>Kubernetes 引入 Pod 主要基于下面两个目的：</strong></p>
+<ul>
+<li><p>方便管理：Pod通过提供比其组成应用程序更高级别的抽象，简化应用程序部署和管理。以Pod为部署单元，它解决了容器水平扩展和复制、共同调度，生命周期，协调复制，资源共享和依赖性管理等问题。</p>
+</li>
+<li><p>资源共享和容器间通信：应用在Pod中使用相同的名称空间（相同的IP和Port），使用<code>localhost</code>就能相互通信，在Pod与Pod之间，每个Pod都有一个IP地址，可与整个网络中的其他Pod进行通信。</p>
+</li>
+</ul>
+<h2 id="3-Controller"><a href="#3-Controller" class="headerlink" title="3. Controller"></a>3. Controller</h2><h3 id="3-1-Replication-Controller"><a href="#3-1-Replication-Controller" class="headerlink" title="3.1 Replication Controller"></a>3.1 Replication Controller</h3><p>  RC确保在任意时间保证Pod的数量，或者说RC保证在Pod创建后，在任意一时间都是可用的。当在Kubernetes集群中有很多Pods时，当Pod因失败，数量增加或减少时，不同于手动创建Pod的方式，RC会自动增加或减少Pod达到预期的数量。如果把它比作进程管理着，那RC监控着多个节点上的多个Pod。在此基础上，RC还提供了一些更高级的特性，比如滚动升级、升级回滚等。</p>
+<h3 id="3-1-ReplicaSet"><a href="#3-1-ReplicaSet" class="headerlink" title="3.1 ReplicaSet"></a>3.1 ReplicaSet</h3><p>  ReplicaSet 是下一代的Replication Controller，不同之处在于ReplicaSet 在原有的基础加入了选择器的支持，实现了 Pod 的多副本管理。使用 Deployment 时会自动创建 ReplicaSet，也就是说 Deployment 是通过 ReplicaSet 来管理 Pod 的多个副本的，通常不需要我们直接使用 ReplicaSet。</p>
+<h3 id="3-2-Job"><a href="#3-2-Job" class="headerlink" title="3.2 Job"></a>3.2 Job</h3><p>  就像它名字来一样，它代表着一次任务，与之相关联的Pod分为两种：其他Controller创建的是长期的Pod，Job创建是临时的Pod，该Pod在任务完成后删除。</p>
+<p>同时Job可以控制一次性任务的Pod的完成次数<code>.Job.spec.completions</code>和并发执行数<code>.Job.spec.parallelism</code>，当Pod成功执行指定次数后，即认为Job执行完毕。在<code>.spec.template.spec.restartPolicy</code>  （重启策略）中，只能是Never和OnFailure。</p>
+<h3 id="3-3-Deployments"><a href="#3-3-Deployments" class="headerlink" title="3.3 Deployments"></a>3.3 Deployments</h3><p>Deployment是最常用的Controller，当我们用yml文件去描述想要的Pod 的状态，Deployment controller 就会帮我们将 Pod 和ReplicaSet 的实际状态改变到我们所描述的目标状态。</p>
+<h3 id="3-4-StatefulSets"><a href="#3-4-StatefulSets" class="headerlink" title="3.4 StatefulSets"></a>3.4 StatefulSets</h3><p>Pod调度运行时，如果应用不需要任何稳定的标示、有序的部署、删除和扩展，则只需要使用一组无状态副本的控制器来部署应用，这样的Controller有：Deployment、ReplicaSet，这样的Controller更适合无状态服务需求。当我们需要Pod在重启后名称不变，并按照一定顺序去部署或者删除我们的Pod时，这就需要StatefulSets了。</p>
+<p>使用StatefulSets时，具有以下特点：</p>
+<ul>
+<li><p>稳定性，唯一的网络标识符</p>
+</li>
+<li><p>稳定性，持久化存储</p>
+</li>
+<li>有序的部署和扩展</li>
+<li>有序的删除和终止</li>
+<li>有序的自动滚动更新</li>
+</ul>
+<p>这样更好的应对在更复杂的场景需求。</p>
+<h3 id="3-5-DaemonSet"><a href="#3-5-DaemonSet" class="headerlink" title="3.5 DaemonSet"></a>3.5 DaemonSet</h3><p>DaemonSet保证每一个Node节点上，运行着一个和其他节点上相同的副本Pod，当在集群中增加或减少Node节点时，在该节点上Pods也会被部署或删除，当删除DaemonSet时每个节点上的Pod会被清理 。</p>
+<p>下面列举几个应用的场景：集群中每个Node上用于存储的守护进程，如<code>gluster</code> <code>ceph</code>；收集日志的守护进程，如<code>fluentd</code> <code>logstash</code>等。</p>
+<h2 id="4-Label"><a href="#4-Label" class="headerlink" title="4 Label"></a>4 Label</h2><p>Label是另一个核心的概念 ，Label是一个k-v的键值对，由于它的灵活性，Label可以很轻松的附加都各种资源上，一个资源对象可以定义任意数量的Label，同一个Label可以添加到任意数量的资源对象上去。这样我们就可以给指定的Label来实现 多维度的资源管理分组等功能。</p>
+<p>Label Selector 在Kubernetes中的使用场景有以下几处：</p>
+<ul>
+<li>kube-controller进程通过资源对象RC上定义的Label Selector来筛选要监控的Pod 的副本数量，从而实现Pod副本的数量始终符合预期设定的数目。</li>
+<li>kube-proxy 进程通过Service的Label Selector来选择对应的Pod，自动建立每个Service对应Pod的请求转发路由表，从而实现负载均衡。</li>
+<li>通过对某个Node定义特定的Label，并且在Pod定义文件yml 中使用NodeSelector 这种标签调度策略，kube-schedular 进程可以实现Pod的定向调度的特性。</li>
+</ul>
+<h2 id="5-Service"><a href="#5-Service" class="headerlink" title="5 Service"></a>5 Service</h2><p>在Kubernetes中Pod 是有生命周期的，它们可以被创建，也可以被销毁，然而一旦被销毁生命就永远结束。 通过 ReplicationController 能够动态地创建和销毁 Pod。当进行扩缩容， 滚动升级时。 每个 Pod 都会获取它自己的 IP 地址，这些 IP 地址总是不固定的。这会导致一个问题：在 Kubernetes 集群中，如果一组 Pod（称为 backend）为其它 Pod （称为 frontend）提供服务，那么那些 frontend 该如何发现，并连接到这组 Pod 中的哪些 backend 呢？答案就是Service。</p>
+<p>Kubernetes Service 定义了这样一种抽象：一个 Pod 的逻辑分组，一种可以访问它们的策略 —— 通常称为微服务。</p>
+<p>Pod的EndPoint（ContainerPort+Pod IP）地址会随着Pod的销毁和创建而发生改变，而Service一旦创建，Kubernetes就会自动为它分配一个固定的、唯一的虚拟IP （Cluster IP），在Service的整个周期内Cluster IP不会改变。Kubernetes<strong>服务发现</strong>的问题，就很好的解决了，同时还为 Pod 提供了负载均衡。</p>
+<p>Pod、 RC 与Service的逻辑关系 </p>
+<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1h3oykwodj30qo0k00te.jpg" alt="Service">当前端的Pod需要访问另一组Pod时，Service定义了一个服务的访问入口地址，通过这个入口访问其背后的由一组Pod副本所组成的实例，Service与其后端则是通过根据Label Selector来实现从多个Pod中选取所期望的Pod，RC保证Service的服务能力和服务的质量达到预期的标准。</p>
+<h2 id="6-Namespace"><a href="#6-Namespace" class="headerlink" title="6 Namespace"></a>6 Namespace</h2><p>在Kubernetes中可以使用Namespaces（命名空间）创建多个虚拟集群。当团队或项目中具有许多用户时，可以考虑使用Namespace来区分，如果是少量用户集群，可以不需要考虑使用Namespace，如果需要它们提供特殊性质时，可以开始使用Namespace。Namespace为名称提供了一个范围。资源的Names在Namespace中具有唯一性。在未来的Kubernetes版本中，默认情况下，相同Namespace中的对象将具有相同的访问控制策略。</p>
+<p>在理解理清这些概念后，还需要在以后在使用Kubernetes中更深入的理解这些概念。</p>
+<p>参考</p>
+<p>《Kubernetes权威指南》</p>
+<p><a href="https://kubernetes.io/docs/home/?path=users&amp;persona=app-developer&amp;level=foundational" target="_blank" rel="noopener">Kubernetes document</a></p>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-03-26T22:56:28+08:00" content="2019-03-26">
-          03-26
-        </time>
+        
       </div>
-
-    </header>
-  </article>
-
-
+      
+      
       
     </div>
+    
 
+
+
+    
+    
+    
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -436,8 +519,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -623,6 +715,23 @@
       </div>
 
       
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-Master"><span class="nav-number">1.</span> <span class="nav-text">1.1 Master</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-Node"><span class="nav-number">2.</span> <span class="nav-text">1.2 Node</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Pod"><span class="nav-number">3.</span> <span class="nav-text">2. Pod</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Controller"><span class="nav-number">4.</span> <span class="nav-text">3. Controller</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Replication-Controller"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 Replication Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-ReplicaSet"><span class="nav-number">4.2.</span> <span class="nav-text">3.1 ReplicaSet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Job"><span class="nav-number">4.3.</span> <span class="nav-text">3.2 Job</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-Deployments"><span class="nav-number">4.4.</span> <span class="nav-text">3.3 Deployments</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-StatefulSets"><span class="nav-number">4.5.</span> <span class="nav-text">3.4 StatefulSets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-5-DaemonSet"><span class="nav-number">4.6.</span> <span class="nav-text">3.5 DaemonSet</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-Label"><span class="nav-number">5.</span> <span class="nav-text">4 Label</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Service"><span class="nav-number">6.</span> <span class="nav-text">5 Service</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Namespace"><span class="nav-number">7.</span> <span class="nav-text">6 Namespace</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
       
 
@@ -765,6 +874,10 @@
 
 
   
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
 
   
 
@@ -780,6 +893,8 @@
 
   
 
+
+  
 
 
   
