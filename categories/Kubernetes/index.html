@@ -96,27 +96,23 @@
 
 
 
-  <meta name="description" content="I/O scheduler（I/O 调度器） I/O scheduler （也叫做 I/O elevator）在linux中，每个块设备或者块设备的分区，都对应有自身的请求队列(request_queue),而每个请求队列都可以选择一个I/O调度器来协调所递交的request。I/O调度器的基本目的是将请求按照它们对应在块设备上的扇区号进行排列，以减少磁头的移动，提高效率。 Linux IO Sc">
-<meta name="keywords" content="I&#x2F;O schedulers">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Linux IO Scheduler">
-<meta property="og:url" content="https://nova-he.github.io/2019/03/26/Linux IO Scheduler/index.html">
+  <meta name="description" content="时光荏苒，不在年少">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nova&#39;s Blog">
+<meta property="og:url" content="https://nova-he.github.io/categories/Kubernetes/index.html">
 <meta property="og:site_name" content="Nova&#39;s Blog">
-<meta property="og:description" content="I/O scheduler（I/O 调度器） I/O scheduler （也叫做 I/O elevator）在linux中，每个块设备或者块设备的分区，都对应有自身的请求队列(request_queue),而每个请求队列都可以选择一个I/O调度器来协调所递交的request。I/O调度器的基本目的是将请求按照它们对应在块设备上的扇区号进行排列，以减少磁头的移动，提高效率。 Linux IO Sc">
+<meta property="og:description" content="时光荏苒，不在年少">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjgwaadtj30dw0eigm1.jpg">
-<meta property="og:updated_time" content="2019-03-26T13:55:47.806Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Linux IO Scheduler">
-<meta name="twitter:description" content="I/O scheduler（I/O 调度器） I/O scheduler （也叫做 I/O elevator）在linux中，每个块设备或者块设备的分区，都对应有自身的请求队列(request_queue),而每个请求队列都可以选择一个I/O调度器来协调所递交的request。I/O调度器的基本目的是将请求按照它们对应在块设备上的扇区号进行排列，以减少磁头的移动，提高效率。 Linux IO Sc">
-<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjgwaadtj30dw0eigm1.jpg">
+<meta name="twitter:title" content="Nova&#39;s Blog">
+<meta name="twitter:description" content="时光荏苒，不在年少">
 
 
 
 
 
 
-  <link rel="canonical" href="https://nova-he.github.io/2019/03/26/Linux IO Scheduler/">
+  <link rel="canonical" href="https://nova-he.github.io/categories/Kubernetes/">
 
 
 
@@ -126,7 +122,7 @@
   };
 </script>
 
-  <title>Linux IO Scheduler | Nova's Blog</title>
+  <title>分类: Kubernetes | Nova's Blog</title>
   
 
 
@@ -174,7 +170,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -250,7 +246,7 @@
         
         
           
-          <li class="menu-item menu-item-categories">
+          <li class="menu-item menu-item-categories menu-item-active">
 
     
     
@@ -296,6 +292,25 @@
 
   
     
+
+    
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+      
+      
+    
+    
+
+  
+
 
   
 
@@ -351,255 +366,57 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
+  
+  
+  
+  <div class="post-block category">
 
-  
+    <div id="posts" class="posts-collapse">
+      <div class="collection-title">
+        <h1>Kubernetes<small>分类</small>
+        </h1>
+      </div>
 
-  
-  
-  
-
-  
+      
+        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2019/03/26/Linux IO Scheduler/">
+    <header class="post-header">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="博主">
-      <meta itemprop="description" content="时光荏苒，不在年少">
-      <meta itemprop="image" content="/images/mapleleaf.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Nova's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
+      <h2 class="post-title">
         
+          <a class="post-title-link" href="/2019/03/26/Kubernetes_concepts/" itemprop="url">
+            
+              <span itemprop="name">Kubernetes基本概念</span>
+            
+          </a>
         
-          <h1 class="post-title" itemprop="name headline">Linux IO Scheduler
+      </h2>
 
-              
-            
-          </h1>
-        
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2019-03-26T22:56:28+08:00" content="2019-03-26">
+          03-26
+        </time>
+      </div>
 
-        <div class="post-meta">
-          <span class="post-time">
+    </header>
+  </article>
 
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建于：2019-03-26 22:56:28 / 更新于：21:55:47" itemprop="dateCreated datePublished" datetime="2019-03-26T22:56:28+08:00">2019-03-26</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-            <span id="/2019/03/26/Linux IO Scheduler/" class="leancloud_visitors" data-flag-title="Linux IO Scheduler">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Aufrufe：</span>
-              
-                <span class="leancloud-visitors-count"></span>
-            </span>
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Symbole im Artikel gezählt：</span>
-                
-                <span title="Symbole im Artikel gezählt">1.9k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Lesezeit &asymp;</span>
-                
-                <span title="Lesezeit">2 minuten.</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h3 id="I-O-scheduler（I-O-调度器）"><a href="#I-O-scheduler（I-O-调度器）" class="headerlink" title="I/O scheduler（I/O 调度器）"></a>I/O scheduler（I/O 调度器）</h3><p> I/O scheduler （也叫做 I/O elevator）在linux中，每个块设备或者块设备的分区，都对应有自身的请求队列(request_queue),而每个请求队列都可以选择一个I/O调度器来协调所递交的request。I/O调度器的基本目的是将请求按照它们对应在块设备上的扇区号进行排列，以减少磁头的移动，提高效率。</p>
-<p>Linux IO Scheduler在所处位置：</p>
-<p> <img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjgwaadtj30dw0eigm1.jpg" alt="I/O scheduler"><br><a id="more"></a></p>
-<h3 id="I-O-调度策略"><a href="#I-O-调度策略" class="headerlink" title="I/O 调度策略"></a>I/O 调度策略</h3><p>I/O请求队列的四种调度策略：</p>
-<ul>
-<li><code>NOOP</code> 此算法实现简单的FIFO调度队列。适用于不需要调度算法对I/O队列进行调整场景，例如非旋转型设备（SSD、ramdisk）。</li>
-<li><code>CFQ</code> 类似于CPU时间片，此算法实现了I/O时间片，使用I/O优先级来确定，该进程的请求队列何时可以获取块设备的使用权。保证每一个进程I/O请求的公平性。适用于大多数场景。注意：不同于其他调度算法的是：<code>此算法的对象是进程</code>，可以理解该算法对某些I/O密集型的进程不友好。</li>
-<li><code>Deadline</code> I/O请求的“最后期限”到来时，把这个I/O请求优先级推到最高。适用于读多写少的场景。默认情况下，读请求的超时时间是500ms，写请求的超时时间是5s。</li>
-<li><code>Anticipatory</code> 此算法的实现过程是：当一个I/O读请求做完后，再等待一定时间t（通常是6ms），如果6ms内，这个进程上还有读请求过来，那么会继续服务，否则，处理下一个进程的读写请求。因为可以配置CFQ调参数来达到和其一样的效果，但是Anticipatory比CFQ系统开销高，在linux2.6.33版本后被CFQ所取代。</li>
-</ul>
-<p>在调节之前，需要了解所调整的环境的工作负载类型才能选择合适的scheduler 。</p>
-<hr>
-<h3 id="I-O-Scheduler修改"><a href="#I-O-Scheduler修改" class="headerlink" title="I/O Scheduler修改"></a>I/O Scheduler修改</h3><p>在centos7中 I/O Scheduler ，CFQ用于SATA 硬盘 ，Deadline 用于其他硬盘。<br>查看调度策略：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat /sys/block/sda/queue/scheduler</span><br><span class="line">noop [deadline] cfq</span><br></pre></td></tr></table></figure></p>
-<h4 id="修改调度算法"><a href="#修改调度算法" class="headerlink" title="修改调度算法"></a>修改调度算法</h4><h4 id="临时修改："><a href="#临时修改：" class="headerlink" title="临时修改："></a>临时修改：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"cfq"</span> &gt; /sys/block/sda/queue/scheduler</span><br><span class="line">cat /sys/block/sda/queue/scheduler</span><br><span class="line">noop deadline [cfq]</span><br></pre></td></tr></table></figure>
-<h4 id="永久修改"><a href="#永久修改" class="headerlink" title="永久修改"></a>永久修改</h4><p>永久修改需要在BootLoader加载内核时，给内核传递参数<code>elevator=noop/deadline/cfq</code></p>
-<p>在Centos7中<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grubby --update-kernel=ALL --args=<span class="string">"elevator=cfq"</span></span><br></pre></td></tr></table></figure></p>
-<p>Note：<code>grubby</code>用于在多个体系结构中配置BootLoader菜单的命令行工具，该工具会修改<code>/boot/grub2/grub.cfg</code>文件，更多信息通过man查看。</p>
-<p>查看修改情况：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># On BIOS-based machines:/boot/grub2/grub.cfg           # BIOS启动</span></span><br><span class="line"><span class="comment"># On UEFI-based machines:/boot/efi/EFI/redhat/grub.cfg  # UEFI启动 </span></span><br><span class="line"></span><br><span class="line">cat /boot/grub2/grub.cfg |grep elevator</span><br><span class="line"><span class="comment">#给内核传递参数elevator</span></span><br><span class="line">linux16 /vmlinuz-3.10.0-693.5.2.el7.x86_64 root=/dev/mapper/cl-root ... rhgb quiet elevator=noop</span><br></pre></td></tr></table></figure></p>
-<p>在CentOS6中<br>在centos6需要直接修改配置文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/default/grub</span><br><span class="line"></span><br><span class="line">GRUB_CMDLINE_LINUX=<span class="string">"elevator=noop"</span>   <span class="comment"># 这一行是存在，在引号内追加。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># On BIOS-based machines:  </span></span><br><span class="line">grub2-mkconfig -o /boot/grub2/grub.cfg</span><br><span class="line"></span><br><span class="line"><span class="comment"># On UEFI-based machines:</span></span><br><span class="line">grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg</span><br></pre></td></tr></table></figure></p>
-<p>注意：最终修改文件都是<code>/boot/grub2/grub.cfg</code>，当然你也可以直接修改此文件。</p>
-<h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://www.certdepot.net/rhel7-configure-io-schedulers/" target="_blank" rel="noopener">RHEL7: How to configure I/O schedulers.</a><br><a href="https://access.redhat.com/solutions/32376" target="_blank" rel="noopener">Using the Deadline IO Scheduler</a><br><a href="http://www.cnblogs.com/cobbliu/p/5389556.html" target="_blank" rel="noopener">Linux IO Scheduler（Linux IO 调度器）</a></p>
 
       
     </div>
 
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/I-O-schedulers/" rel="tag"># I/O schedulers</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2019/03/26/link/" rel="next" title="Linux软硬链接">
-                <i class="fa fa-chevron-left"></i> Linux软硬链接
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/03/26/Linux_awk/" rel="prev" title="Linux文本处理三剑客之awk">
-                Linux文本处理三剑客之awk <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
   </div>
   
   
   
-  </article>
-
-
-  </div>
-
-
-          </div>
-          
 
   
 
 
+
+          </div>
+          
 
         </div>
         
@@ -619,17 +436,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <div class="site-overview-wrap sidebar-panel">
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -815,23 +623,6 @@
       </div>
 
       
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#I-O-scheduler（I-O-调度器）"><span class="nav-number">1.</span> <span class="nav-text">I/O scheduler（I/O 调度器）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-O-调度策略"><span class="nav-number">2.</span> <span class="nav-text">I/O 调度策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-O-Scheduler修改"><span class="nav-number">3.</span> <span class="nav-text">I/O Scheduler修改</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#修改调度算法"><span class="nav-number">3.1.</span> <span class="nav-text">修改调度算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#临时修改："><span class="nav-number">3.2.</span> <span class="nav-text">临时修改：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#永久修改"><span class="nav-number">3.3.</span> <span class="nav-text">永久修改</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
-      
 
       
 
@@ -974,10 +765,6 @@
 
 
   
-  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
-<script src="/js/src/post-details.js?v=7.0.1"></script>
-
-
 
   
 
@@ -993,8 +780,6 @@
 
   
 
-
-  
 
 
   
@@ -1326,32 +1111,38 @@
   
   <script>
     
-    function addCount(Counter) {
+    function showTime(Counter) {
+      var entries = [];
       var $visitors = $('.leancloud_visitors');
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
 
-      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+      $visitors.each(function() {
+        entries.push( $(this).attr('id').trim() );
+      });
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url: { '$in': entries } }) })
         .done(function({ results }) {
-          if (results.length > 0) {
-            var counter = results[0];
-            
-            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({ time: { '__op': 'Increment', 'amount': 1 } }))
-            
-              .done(function() {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.time + 1);
-              })
-            
-              .fail(function ({ responseJSON }) {
-                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
-              })
-          } else {
-            
-              var $element = $(document.getElementById(url));
-              $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
-              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
-            
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.url;
+            var time = item.time;
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for (var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if (countSpan.text() == '') {
+              countSpan.text(0);
+            }
           }
         })
         .fail(function ({ responseJSON }) {
@@ -1376,7 +1167,9 @@
             });
           };
           
-            addCount(Counter);
+            if ($('.post-title-link').length >= 1) {
+              showTime(Counter);
+            }
           
         });
     });
