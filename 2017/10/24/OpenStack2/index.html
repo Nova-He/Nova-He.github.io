@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/favicon.ico?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本实验将多台物理主机中的虚拟主机组合，在主机A（计算节点）的虚拟主机形成局域网，同时通过主机B（控制节点）对外通信。。。 网络拓扑图">
+<meta name="keywords" content="OpenStack,Openvswitch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenStack--网络环境实践(二)">
+<meta property="og:url" content="https://nova-he.github.io/2017/10/24/OpenStack2/index.html">
+<meta property="og:site_name" content="Nova&#39;s Blog">
+<meta property="og:description" content="本实验将多台物理主机中的虚拟主机组合，在主机A（计算节点）的虚拟主机形成局域网，同时通过主机B（控制节点）对外通信。。。 网络拓扑图">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gj9qxy26j312s0m4jvh.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gja0lul3j30kb08waaz.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjaaei04j30ms04s3zw.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjajhr7pj30t307wn02.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjatuaeej30v706rgo2.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjb2l70oj30ov07t40s.jpg">
+<meta property="og:updated_time" content="2019-03-27T11:23:35.650Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenStack--网络环境实践(二)">
+<meta name="twitter:description" content="本实验将多台物理主机中的虚拟主机组合，在主机A（计算节点）的虚拟主机形成局域网，同时通过主机B（控制节点）对外通信。。。 网络拓扑图">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gj9qxy26j312s0m4jvh.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="https://nova-he.github.io/2017/10/24/OpenStack2/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>OpenStack--网络环境实践(二) | Nova's Blog</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Nova's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">时光荏苒，不在年少</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-notes">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/notes" rel="section"><i class="menu-item-icon fa fa-fw fa-leaf"></i> <br>notes</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-messages">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/messages" rel="section"><i class="menu-item-icon fa fa-fw fa-paper-plane"></i> <br>messages</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+  
+  
+  
+  
+
+  
+
+  <a href="https://github.com/Nova-He" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewbox="0 0 250 250" style="fill: #222; color: #fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a>
+
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2017/10/24/OpenStack2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="博主">
+      <meta itemprop="description" content="学习 生活 记录">
+      <meta itemprop="image" content="/images/mapleleaf.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nova's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">OpenStack--网络环境实践(二)
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+          
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-10-24 00:00:00" itemprop="dateCreated datePublished" datetime="2017-10-24T00:00:00+08:00">2017-10-24</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-27 19:23:35" itemprop="dateModified" datetime="2019-03-27T19:23:35+08:00">2019-03-27</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/OpenStack/" itemprop="url" rel="index"><span itemprop="name">OpenStack</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2017/10/24/OpenStack2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/10/24/OpenStack2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2017/10/24/OpenStack2/" class="leancloud_visitors" data-flag-title="OpenStack--网络环境实践(二)">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Symbols count in article: </span>
+                
+                <span title="Symbols count in article">3.4k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">3 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本实验将多台物理主机中的虚拟主机组合，在主机A（计算节点）的虚拟主机形成局域网，同时通过主机B（控制节点）对外通信。。。</p>
+<p>网络拓扑图</p>
+<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gj9qxy26j312s0m4jvh.jpg" alt="enter description here"><br><a id="more"></a></p>
+<p>外网地址规划<br>主机A作为计算节点，B作为网络控制节点，网关和DNS服务器为为<code>192.168.153.2</code></p>
+<table>
+<thead>
+<tr>
+<th>主机</th>
+<th>IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A ens33</td>
+<td>192.168.153.141/24</td>
+</tr>
+<tr>
+<td>B ens33</td>
+<td>192.168.153.142/24</td>
+</tr>
+</tbody>
+</table>
+<p>内网网络地址规划</p>
+<table>
+<thead>
+<tr>
+<th>主机</th>
+<th>IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A ens37</td>
+<td>192.168.10.1/24</td>
+</tr>
+<tr>
+<td>B ens37</td>
+<td>192.168.10.2/24</td>
+</tr>
+</tbody>
+</table>
+<p>虚拟网络地址规划<br><code>10.0.4.200 -- 10.0.4.220</code>由A主机网络名称空间<code>dnsmasq</code>提供</p>
+<table>
+<thead>
+<tr>
+<th>主机</th>
+<th>IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM1</td>
+<td>10.0.4.215/24</td>
+</tr>
+<tr>
+<td>VM2</td>
+<td>10.0.4.210/24</td>
+</tr>
+<tr>
+<td>VM3</td>
+<td>10.0.4.211/24</td>
+</tr>
+<tr>
+<td>DHCP</td>
+<td>10.0.4.224/24</td>
+</tr>
+<tr>
+<td>NS rin0</td>
+<td>10.0.4.223/24</td>
+</tr>
+<tr>
+<td>NS rex0</td>
+<td>192.168.153.145/24</td>
+</tr>
+</tbody>
+</table>
+<p>接<a href="https://www.nova-he.github.io/2017/09/28/OpenStack2/" target="_blank" rel="noopener">OpenStack–网络环境实践(一)</a></p>
+<h3 id="桥接物理网卡设备"><a href="#桥接物理网卡设备" class="headerlink" title="桥接物理网卡设备"></a>桥接物理网卡设备</h3><p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gja0lul3j30kb08waaz.jpg" alt="enter description here"></p>
+<p>如图只需将虚拟交换机连到外网，即可通信~ 至于为什么加一个名称空间，因为名称空间可以方便快捷的管理虚拟机局域网络。</p>
+<p>创建物理桥设备,并将网卡桥接到物理网卡上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">vim /etc/sysconfig/network-script/ifcfg-br0</span><br><span class="line"></span><br><span class="line">TYPE=Bridge</span><br><span class="line">DEFROUTE=yes</span><br><span class="line">PEERDNS=yes</span><br><span class="line">PEERROUTES=yes</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">NAME=br0</span><br><span class="line">DEVICE=br0</span><br><span class="line">ONBOOT=yes</span><br><span class="line">IPADDR=192.168.153.141</span><br><span class="line">GATEWAY=192.168.153.2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 清除ifcfg-ens33配置地址</span><br><span class="line"> vim /etc/sysconfig/network-scripts/ifcfg-ens33 </span><br><span class="line"></span><br><span class="line">TYPE=Ethernet</span><br><span class="line">BOOTPROTO=static</span><br><span class="line">NAME=ens33</span><br><span class="line">DEVICE=ens33</span><br><span class="line">ONBOOT=yes</span><br><span class="line"></span><br><span class="line"># 重启网络并把物理网卡加到物理桥上</span><br><span class="line">yum install bridge-uils</span><br><span class="line">systemctl restart network &amp;&amp; brctl addif br0</span><br></pre></td></tr></table></figure>
+<h3 id="虚拟机与域名空间通信"><a href="#虚拟机与域名空间通信" class="headerlink" title="虚拟机与域名空间通信"></a>虚拟机与域名空间通信</h3><p>给虚拟主机VM2添加网关</p>
+<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjaaei04j30ms04s3zw.jpg" alt="enter description here"></p>
+<blockquote>
+<p>可能遇到的问题：当默认网关存在多个时，ping报文可能不被送出<br>解决办法：删除其他默认的网关</p>
+</blockquote>
+<p>在名称空间打开路由转发功能，使其能和域名空间内另一块网卡通信<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip netns exec ns  sysctl -w net.ipv4.ip_forward=1</span><br></pre></td></tr></table></figure></p>
+<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjajhr7pj30t307wn02.jpg" alt="enter description here"><br>现在能与网络空间<code>NS</code>的另一块网卡(IP:192.168.153.143)通信</p>
+<h3 id="虚拟机与宿主机同一网段内的其他主机通信"><a href="#虚拟机与宿主机同一网段内的其他主机通信" class="headerlink" title="虚拟机与宿主机同一网段内的其他主机通信"></a>虚拟机与宿主机同一网段内的其他主机通信</h3><p>虚拟机处于路由模型向外发送数据，相应包无法送回，与宿主机的其他主机(192.168.153.143)不能通信，添加iptables NAT规则，变为nat模型网络向外通信…<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ip netns exec ns iptables -t nat -A POSTROUTING -s 10.0.4.0/24 -j SNT --to-source 192.168.153.145 </span><br><span class="line">ip netns exec ns iptables -t nat -A PREROUTING -d 192.168.153.145 -j DNAT --to-destination 10.0.4.210</span><br></pre></td></tr></table></figure></p>
+<p>ping宿主机内的其他主机</p>
+<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjatuaeej30v706rgo2.jpg" alt="enter description here"><br>主机能正常通信</p>
+<p>在<code>192.168.153.143</code>的主机抓包<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# tcpdump -i ens33 icmp -nn</span><br><span class="line">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span><br><span class="line">listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes</span><br><span class="line">05:43:50.612719 IP 192.168.153.145 &gt; 192.168.153.143: ICMP echo request, id 2561, seq 0, length 64</span><br><span class="line">05:43:50.612766 IP 192.168.153.143 &gt; 192.168.153.145: ICMP echo reply, id 2561, seq 0, length 64</span><br></pre></td></tr></table></figure></p>
+<h3 id="主机与外网通信"><a href="#主机与外网通信" class="headerlink" title="主机与外网通信"></a>主机与外网通信</h3><p>主机不能与互联网通信，在B主机ens37抓包查看原因<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# tcpdump -i ens37 -nn</span><br><span class="line">tcpdump: verbose output suppressed, use -v or -vv for full protocol decode</span><br><span class="line">listening on ens37, link-type EN10MB (Ethernet), capture size 262144 bytes</span><br><span class="line">03:00:48.272041 IP 192.168.10.1 &gt; 192.168.10.2: GREv0, length 102: IP 10.0.4.210 &gt; 59.110.231.224: ICMP echo request, id 3585, seq 238, length 64</span><br><span class="line">03:00:48.272406 IP 192.168.10.2 &gt; 192.168.10.1: GREv0, length 130: IP 10.0.4.253 &gt; 10.0.4.210: ICMP net 59.110.231.224 unreachable, length 92   #报文能到达网关，网关回应没有路由</span><br></pre></td></tr></table></figure></p>
+<p>观察发现：报文能到达网关，网关回应没有路由，于是在域名空间查看路由<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ip netns exec ns route</span><br><span class="line">Kernel IP routing table</span><br><span class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</span><br><span class="line">10.0.4.0        0.0.0.0         255.255.255.0   U     0      0        0 rin0</span><br><span class="line">192.168.153.0   0.0.0.0         255.255.255.0   U     0      0        0 rex0</span><br></pre></td></tr></table></figure></p>
+<p>增加路由<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# ip netns exec ns route -n</span><br><span class="line">Kernel IP routing table</span><br><span class="line">Destination     Gateway         Genmask         Flags Metric Ref    Use Iface</span><br><span class="line">0.0.0.0         192.168.153.2   0.0.0.0         UG    0      0        0 rex0</span><br><span class="line">10.0.4.0        0.0.0.0         255.255.255.0   U     0      0        0 rin0</span><br></pre></td></tr></table></figure></p>
+<p>虚拟机VM2添加域名解析主机<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;nameserver 192.168.153.2&quot; &gt; /etc/resolve.conf</span><br></pre></td></tr></table></figure></p>
+<p>主机能与外网通信</p>
+<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjb2l70oj30ov07t40s.jpg" alt="enter description here"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><code>GRE</code>技术出现解决了虚拟机在主机之间通信的问题，当然同样的技术还有<code>Vxlan</code>技术。</li>
+<li>这种网络模型实现了虚拟机网络，与真实主机网络的隔离，可以方便的自定义网络。<code>控制节点添加一个IP号，即可映射一台VM主机，这样的外部的真实主机一样的通信</code></li>
+<li>技术带来无限可能。</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OpenStack/" rel="tag"># OpenStack</a>
+          
+            <a href="/tags/Openvswitch/" rel="tag"># Openvswitch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/23/OpenStack1/" rel="next" title="OpenStack--网络环境实践(一)">
+                <i class="fa fa-chevron-left"></i> OpenStack--网络环境实践(一)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/27/cluster_problems/" rel="prev" title="集群问题">
+                集群问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/mapleleaf.jpg" alt="博主">
+            
+              <p class="site-author-name" itemprop="name">博主</p>
+              <div class="site-description motion-element" itemprop="description">学习 生活 记录</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">16</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://nova-he.github.io" title="GitHub &rarr; https://nova-he.github.io"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#桥接物理网卡设备"><span class="nav-number">1.</span> <span class="nav-text">桥接物理网卡设备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机与域名空间通信"><span class="nav-number">2.</span> <span class="nav-text">虚拟机与域名空间通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机与宿主机同一网段内的其他主机通信"><span class="nav-number">3.</span> <span class="nav-text">虚拟机与宿主机同一网段内的其他主机通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主机与外网通信"><span class="nav-number">4.</span> <span class="nav-text">主机与外网通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">博主</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="Symbols count total">118k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="Reading time total">1:47</span>
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.0.1</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'SYeq2iIs3l6BQ9IJzmjqDdSC-gzGzoHsz',
+    appKey: 'a1Slzm2UnH52mws9fPzOK0oF',
+    placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!',
+    avatar: 'retro',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: 'en' || 'zh-cn'
+  });
+</script>
+
+
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1000');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $('.leancloud_visitors');
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', '/classes/Counter/' + counter.objectId, JSON.stringify({ time: { '__op': 'Increment', 'amount': 1 } }))
+            
+              .done(function() {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.time + 1);
+              })
+            
+              .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+              })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! More info at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see how to solve it here: https://github.com/theme-next/hexo-leancloud-counter-security. \n However, you can still use LeanCloud without security, by setting `security` option to `false`.');
+            
+          }
+        })
+        .fail(function ({ responseJSON }) {
+          console.log('LeanCloud Counter Error: ' + responseJSON.code + ' ' + responseJSON.error);
+        });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + 'SYeq2iIs3l6BQ9IJzmjqDdSC-gzGzoHsz')
+        .done(function({ api_server }) {
+          var Counter = function(method, url, data) {
+            return $.ajax({
+              method: method,
+              url: 'https://' + api_server + '/1.1' + url,
+              headers: {
+                'X-LC-Id': 'SYeq2iIs3l6BQ9IJzmjqDdSC-gzGzoHsz',
+                'X-LC-Key': 'a1Slzm2UnH52mws9fPzOK0oF',
+                'Content-Type': 'application/json',
+              },
+              data: data
+            });
+          };
+          
+            addCount(Counter);
+          
+        });
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

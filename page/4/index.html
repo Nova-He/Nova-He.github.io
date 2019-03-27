@@ -398,7 +398,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2019/03/26/container_list/">
+    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2017/10/15/redis持久化和复制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="博主">
@@ -418,7 +418,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/03/26/container_list/" class="post-title-link" itemprop="url">container/list实现</a>
+                <a href="/2017/10/15/redis持久化和复制/" class="post-title-link" itemprop="url">Redis持久化和复制</a>
               
             
           </h1>
@@ -443,12 +443,24 @@
                 
               
 
-              <time title="Created: 2019-03-26 22:56:28 / Modified: 21:51:45" itemprop="dateCreated datePublished" datetime="2019-03-26T22:56:28+08:00">2019-03-26</time>
+              <time title="Created: 2017-10-15 00:00:00" itemprop="dateCreated datePublished" datetime="2017-10-15T00:00:00+08:00">2017-10-15</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-27 19:26:24" itemprop="dateModified" datetime="2019-03-27T19:26:24+08:00">2019-03-27</time>
               
             
           </span>
@@ -465,7 +477,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/NoSQL/" itemprop="url" rel="index"><span itemprop="name">NoSQL</span></a></span>
 
                 
                 
@@ -484,8 +496,8 @@
                 </span>
             
                 <span class="post-meta-item-text">Comments: </span>
-                <a href="/2019/03/26/container_list/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2019/03/26/container_list/" itemprop="commentCount"></span>
+                <a href="/2017/10/15/redis持久化和复制/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/10/15/redis持久化和复制/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -493,7 +505,7 @@
 
           
           
-            <span id="/2019/03/26/container_list/" class="leancloud_visitors" data-flag-title="container/list实现">
+            <span id="/2017/10/15/redis持久化和复制/" class="leancloud_visitors" data-flag-title="Redis持久化和复制">
               <span class="post-meta-divider">|</span>
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -518,7 +530,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article: </span>
                 
-                <span title="Symbols count in article">2.1k</span>
+                <span title="Symbols count in article">5.5k</span>
               
 
               
@@ -532,7 +544,7 @@
                 
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
-                <span title="Reading time">2 mins.</span>
+                <span title="Reading time">5 mins.</span>
               
             </div>
           
@@ -553,28 +565,16 @@
 
       
         
-          <p>最近看到go源码里的<code>container/list</code>，实现双向循环列表，记录一下关键部分。</p>
-<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
-<li><code>循环链表（circular linked list）</code>将单链表中终端结点的指针端由空指针改为指向头结点，就使整个单链表形成一个环，这种头尾相接的单链表称为单循环链表，简称循环列表。</li>
-<li><code>双向链表（double linkedlist）</code> 在单链表的每个结点中，再设置一个指向其前驱结点的指针域。所以在双向链表中的结点都有两个指针域，一个指向直接后继，另一个指向直接前驱。</li>
-</ul>
-<p>双向循环列表就是二者的结合体，如图为非空的循环的带头结点的双向链表: </p>
-<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjby35qyj30w006zq3p.jpg" alt="非空的循环的带头结点的双向链表"></p>
-<p>在线性表中最实用的就是双向循环列表，Go语言中双向循环列表<code>container/list</code>:</p>
+          <p>Redis作为一个开源的、优秀的、基于内存的<code>key-value</code>缓存及持久化存储解决方案，同时也提供了复制功能，本文主要介绍Redis的持久化功能和复制原理。</p>
+<h2 id="redis持久化"><a href="#redis持久化" class="headerlink" title="redis持久化"></a>redis持久化</h2><p>redis数据的操作在内存中完成，一旦服务器进程退出，数据就会丢失。为了解决这个问题，可将内存中的数据保存到磁盘中，避免数据的丢失，在重启服务时加载数据，实现持久化。Redis提供了两种持久化的方案：</p>
 <ul>
-<li>使用方法：<a href="https://golang.org/pkg/container/list/" target="_blank" rel="noopener">Package list</a></li>
-<li>源码: <a href="https://golang.org/src/container/list/list.go" target="_blank" rel="noopener">Source file src/container/list/list.go</a></li>
-</ul>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><h4 id="节点结构体"><a href="#节点结构体" class="headerlink" title="节点结构体"></a>节点结构体</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Element is an element of a linked list.</span></span><br><span class="line"><span class="keyword">type</span> Element <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">//next and prev node of list </span></span><br><span class="line">	next, prev *Element</span><br><span class="line"></span><br><span class="line">	<span class="comment">// The list to which this element belongs.</span></span><br><span class="line">	list *List</span><br><span class="line"></span><br><span class="line">	<span class="comment">// The value stored with this element.</span></span><br><span class="line">	Value <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>要点：</p>
-<ul>
-<li>类似C语言中的空指针可以指向任何数据结构，空接口可以赋值任何数据结构。</li>
-<li>添加<code>list</code>指针，标识节点属于的<code>list</code>。</li>
+<li><code>RDB</code>持久化 以指定的时间间隔执行数据集的即时点(point-in-time)快照。</li>
+<li><code>AOF</code>持久化 在服务端记录每次收到的写操作，在服务器启动时会重放，以重建原始数据集。</li>
 </ul>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/03/26/container_list/#more" rel="contents">
+              <a class="btn" href="/2017/10/15/redis持久化和复制/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -634,7 +634,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2019/03/26/cluster_problems/">
+    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2017/10/14/MongoDB副本集复制和分片/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="博主">
@@ -654,7 +654,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2019/03/26/cluster_problems/" class="post-title-link" itemprop="url">集群问题</a>
+                <a href="/2017/10/14/MongoDB副本集复制和分片/" class="post-title-link" itemprop="url">MongoDB副本集复制和分片</a>
               
             
           </h1>
@@ -679,12 +679,24 @@
                 
               
 
-              <time title="Created: 2019-03-26 22:56:28 / Modified: 21:50:29" itemprop="dateCreated datePublished" datetime="2019-03-26T22:56:28+08:00">2019-03-26</time>
+              <time title="Created: 2017-10-14 00:00:00" itemprop="dateCreated datePublished" datetime="2017-10-14T00:00:00+08:00">2017-10-14</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-27 19:23:01" itemprop="dateModified" datetime="2019-03-27T19:23:01+08:00">2019-03-27</time>
               
             
           </span>
@@ -701,7 +713,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Architecture/" itemprop="url" rel="index"><span itemprop="name">Architecture</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/NoSQL/" itemprop="url" rel="index"><span itemprop="name">NoSQL</span></a></span>
 
                 
                 
@@ -720,8 +732,8 @@
                 </span>
             
                 <span class="post-meta-item-text">Comments: </span>
-                <a href="/2019/03/26/cluster_problems/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2019/03/26/cluster_problems/" itemprop="commentCount"></span>
+                <a href="/2017/10/14/MongoDB副本集复制和分片/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/10/14/MongoDB副本集复制和分片/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -729,7 +741,7 @@
 
           
           
-            <span id="/2019/03/26/cluster_problems/" class="leancloud_visitors" data-flag-title="集群问题">
+            <span id="/2017/10/14/MongoDB副本集复制和分片/" class="leancloud_visitors" data-flag-title="MongoDB副本集复制和分片">
               <span class="post-meta-divider">|</span>
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -754,7 +766,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article: </span>
                 
-                <span title="Symbols count in article">1.7k</span>
+                <span title="Symbols count in article">14k</span>
               
 
               
@@ -768,7 +780,7 @@
                 
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
-                <span title="Reading time">2 mins.</span>
+                <span title="Reading time">12 mins.</span>
               
             </div>
           
@@ -789,20 +801,13 @@
 
       
         
-          <h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><ul>
-<li><p><code>http重定向</code> 应用层的请求转发。用户的请求到达客户端后，服务端返回HTTP重定向码（302、301），客户端接收重定向码后再次请求<code>real server</code>。</p>
-</li>
-<li><p><code>DNS域名解析负载均衡</code> 在用户请求DNS服务器，获取域名对应的IP地址时，DNS解析后有多个IP地址，DNS服务器通过轮询的方式分发请求。</p>
-</li>
-<li><p><code>反向代理服务器</code>在用户的请求到达反向代理服务器时，由反向代理服务器根据算法转发到具体的服务器。常用apache，nginx充当反向代理服务器。</p>
-</li>
-<li><p><code>IP层负载均衡</code>在请求到达负载均衡器后，负载均衡器通过修改请求的目的IP地址，从而实现请求的转发，做到负载均衡。</p>
-</li>
-<li><p><code>数据链路层负载均衡</code>在请求到达负载均衡器后，负载均衡器通过修改请求的mac地址，从而做到负载均衡，与IP负载均衡不一样的是，当请求访问完服务器之后，直接返回客户。而无需再经过负载均衡器。</p>
+          <p>MongoDB是一个开源非关系文档型数据库。在MongoDB中的每一个记录是一个文档，文档类似于JSON对象，它是一个由字段和值对组成的数据结构。</p>
+<p>类似json的文档存储</p>
+<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjvjxhi5j30fu04q0sz.jpg" alt="类似json的文档存储"><br>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2019/03/26/cluster_problems/#more" rel="contents">
+              <a class="btn" href="/2017/10/14/MongoDB副本集复制和分片/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -810,7 +815,703 @@
           <!--/noindex-->
         
       
-    </li></ul></div>
+    </p></div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2017/09/23/Python_Socket/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="博主">
+      <meta itemprop="description" content="学习 生活 记录">
+      <meta itemprop="image" content="/images/mapleleaf.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nova's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2017/09/23/Python_Socket/" class="post-title-link" itemprop="url">Python Socket 编程</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+          
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-09-23 00:00:00" itemprop="dateCreated datePublished" datetime="2017-09-23T00:00:00+08:00">2017-09-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-27 19:23:52" itemprop="dateModified" datetime="2019-03-27T19:23:52+08:00">2019-03-27</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2017/09/23/Python_Socket/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/09/23/Python_Socket/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2017/09/23/Python_Socket/" class="leancloud_visitors" data-flag-title="Python Socket 编程">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Symbols count in article: </span>
+                
+                <span title="Symbols count in article">4.1k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">4 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Python-Socket-编程"><a href="#Python-Socket-编程" class="headerlink" title="Python Socket 编程"></a>Python Socket 编程</h1><h3 id="Socket-基本概念"><a href="#Socket-基本概念" class="headerlink" title="Socket 基本概念"></a>Socket 基本概念</h3><p>Socket 是对 TCP/IP 协议族的一种封装，是应用层与TCP/IP协议族通信的中间软件抽象层。从设计模式的角度看来，Socket其实就是一个门面模式，它把复杂的TCP/IP协议族隐藏在Socket接口后面，对用户来说，一组简单的接口就是全部，让Socket去组织数据，以符合指定的协议。</p>
+<p>Socket 还可以认为是一种网络间不同计算机上的进程通信的一种方法，利用三元组（ip地址，协议，端口）就可以唯一标识网络中的进程，网络中的进程通信可以利用这个标志与其它进程进行交互。</p>
+<p>Socket 起源于 Unix ，Unix/Linux 基本哲学之一就是“一切皆文件”，都可以用<code>打开(open)</code> -–&gt; <code>读写(write/read)</code> -–&gt; <code>关闭(close)</code>模式来进行操作。因此 Socket 也被处理为一种特殊的文件。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/09/23/Python_Socket/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2017/03/23/ftp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="博主">
+      <meta itemprop="description" content="学习 生活 记录">
+      <meta itemprop="image" content="/images/mapleleaf.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nova's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2017/03/23/ftp/" class="post-title-link" itemprop="url">vsftpd基于pam_mysql的虚拟用户认证</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+          
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-03-23 00:00:00" itemprop="dateCreated datePublished" datetime="2017-03-23T00:00:00+08:00">2017-03-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-27 19:21:42" itemprop="dateModified" datetime="2019-03-27T19:21:42+08:00">2019-03-27</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux-Service/" itemprop="url" rel="index"><span itemprop="name">Linux Service</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2017/03/23/ftp/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/03/23/ftp/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2017/03/23/ftp/" class="leancloud_visitors" data-flag-title="vsftpd基于pam_mysql的虚拟用户认证">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Symbols count in article: </span>
+                
+                <span title="Symbols count in article">3.9k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">4 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>虚拟用户验证登录是ftp中常用的一种策略,因为ftp服务古老而且不安全,使用匿名用户不能有效的控制权限,而本地用户可以登录操作系统,极为不安全,所以引入了虚拟用户的概念,<code>其原理是将多个虚拟用户映射为一个本地用户</code>,从而加强了系统的安全性,本文主要介绍基于mysql的虚拟用户。 其原理图如下：</p>
+<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjdoo8wgj316z0kmgpz.jpg" alt="enter description here"><br>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/03/23/ftp/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </p></div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2017/02/23/samba/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="博主">
+      <meta itemprop="description" content="学习 生活 记录">
+      <meta itemprop="image" content="/images/mapleleaf.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nova's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2017/02/23/samba/" class="post-title-link" itemprop="url">Samba文件共享</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+          
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-02-23 00:00:00" itemprop="dateCreated datePublished" datetime="2017-02-23T00:00:00+08:00">2017-02-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-27 19:24:48" itemprop="dateModified" datetime="2019-03-27T19:24:48+08:00">2019-03-27</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux-Service/" itemprop="url" rel="index"><span itemprop="name">Linux Service</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2017/02/23/samba/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/02/23/samba/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2017/02/23/samba/" class="leancloud_visitors" data-flag-title="Samba文件共享">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Symbols count in article: </span>
+                
+                <span title="Symbols count in article">1.5k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">1 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>建立samba共享，共享目录为/data，要求：<br> 1)共享名为shared，工作组为WORKGROUP；<br> 2)添加组develop，添加用户gentoo,centos和ubuntu，其中gentoo和centos以develop为附加组，ubuntu不属于develop组；密码均为8520；<br> 3)添加samba用户gentoo,centos和ubuntu，密码均为“8520”；<br> 4)此samba共享shared仅允许develop组具有写权限，其他用户只能以只读方式访问；<br> 5)此samba共享服务仅允许来自于172.16.0.0/16网络的主机访问；<br>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2017/02/23/samba/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </p></div>
 
     
 
@@ -895,7 +1596,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">32</span>
+                    <span class="site-state-item-count">35</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>

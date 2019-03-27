@@ -17,6 +17,7 @@
 {"title":"Linux软硬链接","url":"/2019/03/26/link/"},
 {"title":"linux文件时间参数atime，ctime，mtime","url":"/2019/03/26/linux_time_params /"},
 {"title":"Linux启动流程","url":"/2019/03/26/linux启动流程/"},
+{"title":"linux文件时间参数atime，ctime，mtime","url":"/2019/03/26/linux时间参数 /"},
 {"title":"Memcached原理","url":"/2019/03/26/memcached原理/"},
 {"title":"_,ok模式","url":"/2019/03/26/ok_pattern/"},
 {"title":"Python数据结构练习","url":"/2019/03/26/python数据结构练习/"},
@@ -29,6 +30,7 @@
 {"title":"shell编程总结","url":"/2019/03/26/shell_summary/"},
 {"title":"zabbix","url":"/2019/03/26/zabbix/"},
 {"title":"zabbix自定义item key","url":"/2019/03/26/zabbix_custom_item_key /"},
+{"title":"zabbix自定义item key","url":"/2019/03/26/zabbix自定义key/"},
 {"title":"数据结构之线性表（Golang版）","url":"/2019/03/26/数据结构之线性表（Golang版）/"},
 {"title":"数据结构之链式线性表（Python版）","url":"/2019/03/26/数据结构之链式线性表（Python版）/"},
 ]
