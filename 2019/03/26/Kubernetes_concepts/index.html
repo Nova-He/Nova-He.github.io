@@ -107,7 +107,7 @@
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1h3oaju37j30cl0bijrs.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1h3omw4obj30eg0edabb.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1h3oykwodj30qo0k00te.jpg">
-<meta property="og:updated_time" content="2019-03-27T01:35:31.565Z">
+<meta property="og:updated_time" content="2019-03-27T02:06:23.486Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kubernetes基本概念">
 <meta name="twitter:description" content="Kubernetes是基于Google内部的容器编排系统Borg的开源实现，早在很久以前，Google就开始使用Borg容器编排系统承载Google的全部业务。在Docker容器之上，它使用label和pod的概念来将容器换分为逻辑单元。Pods是同地协作（co-located）容器的集合，这些容器被共同部署和调度，形成了一个服务，这是Kubernetes和其他容器编排系统的只要区别，这种逻辑概念">
@@ -373,7 +373,7 @@
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="博主">
-      <meta itemprop="description" content="时光荏苒，不在年少">
+      <meta itemprop="description" content="学习 生活 记录">
       <meta itemprop="image" content="/images/mapleleaf.jpg">
     </span>
 
@@ -395,7 +395,11 @@
 
         <div class="post-meta">
           <span class="post-time">
-
+           
+            <i class="fa fa-thumb-tack"></i>
+            <font color="7D26CD">Top</font>
+            <span class="post-meta-divider">|</span>
+          
             
             
             
@@ -429,7 +433,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-03-27 09:35:31" itemprop="dateModified" datetime="2019-03-27T09:35:31+08:00">2019-03-27</time>
+                <time title="Modified: 2019-03-27 10:06:23" itemprop="dateModified" datetime="2019-03-27T10:06:23+08:00">2019-03-27</time>
               
             
           </span>
@@ -456,6 +460,19 @@
 
           
             
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2019/03/26/Kubernetes_concepts/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/03/26/Kubernetes_concepts/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
           
 
@@ -665,6 +682,10 @@
           
 
   
+    <div class="comments" id="comments">
+    </div>
+
+  
 
 
 
@@ -703,7 +724,7 @@
               <img class="site-author-image" itemprop="image" src="/images/mapleleaf.jpg" alt="博主">
             
               <p class="site-author-name" itemprop="name">博主</p>
-              <div class="site-description motion-element" itemprop="description">时光荏苒，不在年少</div>
+              <div class="site-description motion-element" itemprop="description">学习 生活 记录</div>
           </div>
 
           
@@ -1059,6 +1080,36 @@
   
 
   
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'tl4HDGHqChDtRSPpmuBKYzR6-gzGzoHsz',
+    appKey: '7XcogCsdeneOKA6kGuxI0Cfr',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: 'zh-Hans' || 'zh-cn'
+  });
+</script>
+
+
 
 
   
