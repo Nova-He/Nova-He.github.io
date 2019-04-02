@@ -107,7 +107,7 @@
 <meta property="og:site_name" content="Nova&#39;s Blog">
 <meta property="og:description" content="Dockerfile 中ENTRYPOINT与CMD的区别可以从以下三方面看出： Shell vs. ExecENTRYPOINT和CMD指令支持2种不同的写法: shell表示法和exec表示法.   exec格式 [“executable”, “param1”, “param2”](推荐) shell格式 command param1 param2   CMD 和 ENTRYPOINT两种配置">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-04-02T06:54:29.698Z">
+<meta property="og:updated_time" content="2019-04-02T06:57:05.058Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dockerfile中ENTRYPOINT与CMD的区别">
 <meta name="twitter:description" content="Dockerfile 中ENTRYPOINT与CMD的区别可以从以下三方面看出： Shell vs. ExecENTRYPOINT和CMD指令支持2种不同的写法: shell表示法和exec表示法.   exec格式 [“executable”, “param1”, “param2”](推荐) shell格式 command param1 param2   CMD 和 ENTRYPOINT两种配置">
@@ -445,7 +445,7 @@
                 
               
 
-              <time title="Created: 2019-04-02 14:14:31 / Modified: 14:54:29" itemprop="dateCreated datePublished" datetime="2019-04-02T14:14:31+08:00">2019-04-02</time>
+              <time title="Created: 2019-04-02 14:14:31 / Modified: 14:57:05" itemprop="dateCreated datePublished" datetime="2019-04-02T14:14:31+08:00">2019-04-02</time>
             
 
             
@@ -547,6 +547,7 @@
 <li><code>exec格式</code>使用这种模式时，可以不需要 shell进程，让Docker应用的可执行程成为容器的PID1进程，可以接收Unix信号，比如执行docker stop时能够接收到SIGTERM。</li>
 <li><code>shell格式</code>会始终调用一个shell进程，成为<code>/bin/sh -c</code>的子命令，可执行程序不能响应Unix信号。</li>
 </ul>
+<a id="more"></a>
 <h4 id="覆盖"><a href="#覆盖" class="headerlink" title="覆盖"></a>覆盖</h4><p>在docker镜像运行时, 用户也可以在命令指定具体命令, 覆盖在Dockerfile里的命令</p>
 <p>比如, 我们写了一个这样的Dockerfile:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM busybox:latest </span><br><span class="line">CMD ping localhost</span><br></pre></td></tr></table></figure></p>
 <p>如果根据这个Dockerfile构建一个新image, 名字叫demo<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ docker built -t demo .</span><br><span class="line">[truncated]</span><br><span class="line"></span><br><span class="line">$ docker run -t demo</span><br><span class="line">PING localhost (127.0.0.1) 56(84) bytes of data.</span><br><span class="line">64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.051 ms</span><br><span class="line">64 bytes from localhost (127.0.0.1): icmp_seq=2 ttl=64 time=0.038 ms</span><br><span class="line">^C</span><br><span class="line">--- localhost ping statistics ---</span><br><span class="line">2 packets transmitted, 2 received, 0% packet loss, time 999ms</span><br><span class="line">rtt min/avg/max/mdev = 0.026/0.032/0.039/0.008 ms</span><br></pre></td></tr></table></figure></p>
