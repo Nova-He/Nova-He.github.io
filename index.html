@@ -1326,7 +1326,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2018/06/23/shell_run/" class="post-title-link" itemprop="url">Linux脚本的执行方式解析</a>
+                <a href="/2018/06/23/shell_run/" class="post-title-link" itemprop="url">./和. 执行脚本的执行方式解析</a>
               
             
           </h1>
@@ -1368,7 +1368,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-03-27 19:25:22" itemprop="dateModified" datetime="2019-03-27T19:25:22+08:00">2019-03-27</time>
+                <time title="Modified: 2019-04-04 11:52:03" itemprop="dateModified" datetime="2019-04-04T11:52:03+08:00">2019-04-04</time>
               
             
           </span>
@@ -1413,7 +1413,7 @@
 
           
           
-            <span id="/2018/06/23/shell_run/" class="leancloud_visitors" data-flag-title="Linux脚本的执行方式解析">
+            <span id="/2018/06/23/shell_run/" class="leancloud_visitors" data-flag-title="./和. 执行脚本的执行方式解析">
               <span class="post-meta-divider">|</span>
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -1774,237 +1774,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2018/04/23/grep using/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="博主">
-      <meta itemprop="description" content="学习 生活 记录">
-      <meta itemprop="image" content="/images/mapleleaf.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Nova's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2018/04/23/grep using/" class="post-title-link" itemprop="url">linux文本处理三剑客之grep</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-          
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2018-04-23 00:00:00" itemprop="dateCreated datePublished" datetime="2018-04-23T00:00:00+08:00">2018-04-23</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-03-27 19:25:00" itemprop="dateModified" datetime="2019-03-27T19:25:00+08:00">2019-03-27</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux-Basic/" itemprop="url" rel="index"><span itemprop="name">Linux Basic</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">Comments: </span>
-                <a href="/2018/04/23/grep using/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/04/23/grep using/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-            <span id="/2018/04/23/grep using/" class="leancloud_visitors" data-flag-title="linux文本处理三剑客之grep">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Views: </span>
-              
-                <span class="leancloud-visitors-count"></span>
-            </span>
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Symbols count in article: </span>
-                
-                <span title="Symbols count in article">2.3k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Reading time &asymp;</span>
-                
-                <span title="Reading time">2 mins.</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="grep简介"><a href="#grep简介" class="headerlink" title="grep简介"></a>grep简介</h2><p><strong>grep</strong>：英文缩写Global search Regular Expression and Print out the line(全面搜索正则表达式并把行打印出来)，是一种强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹配的行打印出来。<br>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/04/23/grep using/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </p></div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2018/04/23/link/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2236,7 +2005,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2018/02/27/derfer_pattern/">
+    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2018/04/23/grep using/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="博主">
@@ -2256,7 +2025,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2018/02/27/derfer_pattern/" class="post-title-link" itemprop="url">defer模式</a>
+                <a href="/2018/04/23/grep using/" class="post-title-link" itemprop="url">linux文本处理三剑客之grep</a>
               
             
           </h1>
@@ -2281,7 +2050,7 @@
                 
               
 
-              <time title="Created: 2018-02-27 00:00:00" itemprop="dateCreated datePublished" datetime="2018-02-27T00:00:00+08:00">2018-02-27</time>
+              <time title="Created: 2018-04-23 00:00:00" itemprop="dateCreated datePublished" datetime="2018-04-23T00:00:00+08:00">2018-04-23</time>
             
 
             
@@ -2298,7 +2067,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-03-27 19:20:59" itemprop="dateModified" datetime="2019-03-27T19:20:59+08:00">2019-03-27</time>
+                <time title="Modified: 2019-03-27 19:25:00" itemprop="dateModified" datetime="2019-03-27T19:25:00+08:00">2019-03-27</time>
               
             
           </span>
@@ -2315,7 +2084,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Golang/" itemprop="url" rel="index"><span itemprop="name">Golang</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux-Basic/" itemprop="url" rel="index"><span itemprop="name">Linux Basic</span></a></span>
 
                 
                 
@@ -2334,8 +2103,8 @@
                 </span>
             
                 <span class="post-meta-item-text">Comments: </span>
-                <a href="/2018/02/27/derfer_pattern/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/02/27/derfer_pattern/" itemprop="commentCount"></span>
+                <a href="/2018/04/23/grep using/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/04/23/grep using/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2343,7 +2112,7 @@
 
           
           
-            <span id="/2018/02/27/derfer_pattern/" class="leancloud_visitors" data-flag-title="defer模式">
+            <span id="/2018/04/23/grep using/" class="leancloud_visitors" data-flag-title="linux文本处理三剑客之grep">
               <span class="post-meta-divider">|</span>
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -2368,7 +2137,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article: </span>
                 
-                <span title="Symbols count in article">715</span>
+                <span title="Symbols count in article">2.3k</span>
               
 
               
@@ -2382,7 +2151,7 @@
                 
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
-                <span title="Reading time">1 mins.</span>
+                <span title="Reading time">2 mins.</span>
               
             </div>
           
@@ -2403,19 +2172,11 @@
 
       
         
-          <p>在golang中使用<code>defer</code>确保全部的资源正确的关闭，或者把不使用的资源返回到<code>pool</code>中，其次更重要的是从<code>panicing</code>中<code>recovering</code>。下面总结了所有使用这种模式的例子：</p>
-<ul>
-<li>关闭文件流</li>
-</ul>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// open a file f</span></span><br><span class="line"><span class="keyword">defer</span> f.Cloes()</span><br></pre></td></tr></table></figure>
-<ul>
-<li>给加锁的资源解锁</li>
-</ul>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mu.lock()</span><br><span class="line"><span class="keyword">defer</span> mu.Unlock()</span><br></pre></td></tr></table></figure>
+          <h2 id="grep简介"><a href="#grep简介" class="headerlink" title="grep简介"></a>grep简介</h2><p><strong>grep</strong>：英文缩写Global search Regular Expression and Print out the line(全面搜索正则表达式并把行打印出来)，是一种强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹配的行打印出来。<br>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2018/02/27/derfer_pattern/#more" rel="contents">
+              <a class="btn" href="/2018/04/23/grep using/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -2423,7 +2184,7 @@
           <!--/noindex-->
         
       
-    </div>
+    </p></div>
 
     
 
@@ -2651,6 +2412,245 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2018/02/27/ok_pattern/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2018/02/27/derfer_pattern/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="博主">
+      <meta itemprop="description" content="学习 生活 记录">
+      <meta itemprop="image" content="/images/mapleleaf.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nova's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/02/27/derfer_pattern/" class="post-title-link" itemprop="url">defer模式</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+          
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-02-27 00:00:00" itemprop="dateCreated datePublished" datetime="2018-02-27T00:00:00+08:00">2018-02-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-27 19:20:59" itemprop="dateModified" datetime="2019-03-27T19:20:59+08:00">2019-03-27</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Golang/" itemprop="url" rel="index"><span itemprop="name">Golang</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2018/02/27/derfer_pattern/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/02/27/derfer_pattern/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2018/02/27/derfer_pattern/" class="leancloud_visitors" data-flag-title="defer模式">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Symbols count in article: </span>
+                
+                <span title="Symbols count in article">715</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">1 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>在golang中使用<code>defer</code>确保全部的资源正确的关闭，或者把不使用的资源返回到<code>pool</code>中，其次更重要的是从<code>panicing</code>中<code>recovering</code>。下面总结了所有使用这种模式的例子：</p>
+<ul>
+<li>关闭文件流</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// open a file f</span></span><br><span class="line"><span class="keyword">defer</span> f.Cloes()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>给加锁的资源解锁</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mu.lock()</span><br><span class="line"><span class="keyword">defer</span> mu.Unlock()</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/02/27/derfer_pattern/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>

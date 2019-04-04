@@ -99,19 +99,19 @@
 
 
 
-  <meta name="description" content="linux时间参数Access（atime）：访问时间，指文件最后一次被访问的时间；Modify（mtime）：修改时间，指文件内容最后一次被修改的时间。这里的文件内容指文件内的数据；Change（ctime）：状态修改时间，指文件的属性状态一次被修改的时，比如文件权限、所有者、大小等；">
+  <meta name="description" content="linux时间参数atime 、mtime、ctimeAccess（atime）：访问时间，指文件最后一次被访问的时间；Modify（mtime）：修改时间，指文件内容最后一次被修改的时间。这里的文件内容指文件内的数据；Change（ctime）：状态修改时间，指文件的属性状态一次被修改的时，比如文件权限、所有者、大小等；">
 <meta name="keywords" content="linux_time_params">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux文件时间参数atime，ctime，mtime">
 <meta property="og:url" content="https://nova-he.github.io/2018/01/23/linux时间参数/index.html">
 <meta property="og:site_name" content="Nova&#39;s Blog">
-<meta property="og:description" content="linux时间参数Access（atime）：访问时间，指文件最后一次被访问的时间；Modify（mtime）：修改时间，指文件内容最后一次被修改的时间。这里的文件内容指文件内的数据；Change（ctime）：状态修改时间，指文件的属性状态一次被修改的时，比如文件权限、所有者、大小等；">
+<meta property="og:description" content="linux时间参数atime 、mtime、ctimeAccess（atime）：访问时间，指文件最后一次被访问的时间；Modify（mtime）：修改时间，指文件内容最后一次被修改的时间。这里的文件内容指文件内的数据；Change（ctime）：状态修改时间，指文件的属性状态一次被修改的时，比如文件权限、所有者、大小等；">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjhhoi24j30ej0gawf2.jpg">
-<meta property="og:updated_time" content="2019-03-27T11:31:10.836Z">
+<meta property="og:updated_time" content="2019-04-04T03:49:33.255Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux文件时间参数atime，ctime，mtime">
-<meta name="twitter:description" content="linux时间参数Access（atime）：访问时间，指文件最后一次被访问的时间；Modify（mtime）：修改时间，指文件内容最后一次被修改的时间。这里的文件内容指文件内的数据；Change（ctime）：状态修改时间，指文件的属性状态一次被修改的时，比如文件权限、所有者、大小等；">
+<meta name="twitter:description" content="linux时间参数atime 、mtime、ctimeAccess（atime）：访问时间，指文件最后一次被访问的时间；Modify（mtime）：修改时间，指文件内容最后一次被修改的时间。这里的文件内容指文件内的数据；Change（ctime）：状态修改时间，指文件的属性状态一次被修改的时，比如文件权限、所有者、大小等；">
 <meta name="twitter:image" content="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjhhoi24j30ej0gawf2.jpg">
 
 
@@ -464,7 +464,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-03-27 19:31:10" itemprop="dateModified" datetime="2019-03-27T19:31:10+08:00">2019-03-27</time>
+                <time title="Modified: 2019-04-04 11:49:33" itemprop="dateModified" datetime="2019-04-04T11:49:33+08:00">2019-04-04</time>
               
             
           </span>
@@ -568,7 +568,8 @@
       
 
       
-        <h3 id="linux时间参数"><a href="#linux时间参数" class="headerlink" title="linux时间参数"></a>linux时间参数</h3><p><code>Access（atime）</code>：访问时间，指文件最后一次被访问的时间；<br><code>Modify（mtime）</code>：修改时间，指文件内容最后一次被修改的时间。这里的文件内容指文件内的数据；<br><code>Change（ctime）</code>：状态修改时间，指文件的属性状态一次被修改的时，比如文件权限、所有者、大小等；<br><a id="more"></a><br>查看文件时间戳命令stat<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@cloudhost ~]# stat a</span><br><span class="line">  File: ‘a’</span><br><span class="line">  Size: 0         	Blocks: 0          IO Block: 4096   regular empty file</span><br><span class="line">Device: fd01h/64769d	Inode: 1557836     Links: 1</span><br><span class="line">Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)</span><br><span class="line">Access: 2017-09-13 15:07:15.034441767 +0800  #文件访问时间(ctime)</span><br><span class="line">Modify: 2017-09-13 15:07:15.034441767 +0800  #文件内容修改时间(mtime)</span><br><span class="line">Change: 2017-09-13 15:07:15.034441767 +0800  #文件元数据修改时间(ctime)</span><br><span class="line"> Birth: -</span><br></pre></td></tr></table></figure></p>
+        <h3 id="linux时间参数atime-、mtime、ctime"><a href="#linux时间参数atime-、mtime、ctime" class="headerlink" title="linux时间参数atime 、mtime、ctime"></a>linux时间参数atime 、mtime、ctime</h3><p><code>Access（atime）</code>：访问时间，指文件最后一次被访问的时间；<br><code>Modify（mtime）</code>：修改时间，指文件内容最后一次被修改的时间。这里的文件内容指文件内的数据；<br><code>Change（ctime）</code>：状态修改时间，指文件的属性状态一次被修改的时，比如文件权限、所有者、大小等；<br><a id="more"></a><br>查看文件时间戳命令stat</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@cloudhost ~]# stat a</span><br><span class="line">  File: ‘a’</span><br><span class="line">  Size: 0         	Blocks: 0          IO Block: 4096   regular empty file</span><br><span class="line">Device: fd01h/64769d	Inode: 1557836     Links: 1</span><br><span class="line">Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)</span><br><span class="line">Access: 2017-09-13 15:07:15.034441767 +0800  #文件访问时间(ctime)</span><br><span class="line">Modify: 2017-09-13 15:07:15.034441767 +0800  #文件内容修改时间(mtime)</span><br><span class="line">Change: 2017-09-13 15:07:15.034441767 +0800  #文件元数据修改时间(ctime)</span><br><span class="line"> Birth: -</span><br></pre></td></tr></table></figure>
 <h3 id="尝试使用"><a href="#尝试使用" class="headerlink" title="尝试使用"></a>尝试使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@cloudhost ~]# stat a</span><br><span class="line">  File: ‘a’</span><br><span class="line">  Size: 0         	Blocks: 0          IO Block: 4096   regular empty file</span><br><span class="line">Device: fd01h/64769d	Inode: 1557836     Links: 1</span><br><span class="line">Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)</span><br><span class="line">Access: 2017-09-13 15:07:15.034441767 +0800</span><br><span class="line">Modify: 2017-09-13 15:07:15.034441767 +0800</span><br><span class="line">Change: 2017-09-13 15:07:15.034441767 +0800</span><br><span class="line"> Birth: -</span><br><span class="line"> </span><br><span class="line">[root@cloudhost ~]# cat a   #查看a文件，其他查看命令类似</span><br><span class="line"></span><br><span class="line">[root@cloudhost ~]# stat a</span><br><span class="line">  File: ‘a’</span><br><span class="line">  Size: 0         	Blocks: 0          IO Block: 4096   regular empty file</span><br><span class="line">Device: fd01h/64769d	Inode: 1557836     Links: 1</span><br><span class="line">Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)</span><br><span class="line">Access: 2017-09-13 15:07:39.892069721 +0800  #访问时间发生改变</span><br><span class="line">Modify: 2017-09-13 15:07:15.034441767 +0800</span><br><span class="line">Change: 2017-09-13 15:07:15.034441767 +0800</span><br><span class="line"> Birth: -</span><br></pre></td></tr></table></figure>
 <p>当再次查看时。。。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@cloudhost ~]# cat a</span><br><span class="line">[root@cloudhost ~]# stat a</span><br><span class="line">  File: ‘a’</span><br><span class="line">  Size: 0         	Blocks: 0          IO Block: 4096   regular empty file</span><br><span class="line">Device: fd01h/64769d	Inode: 1557836     Links: 1</span><br><span class="line">Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)</span><br><span class="line">Access: 2017-09-13 15:07:39.892069721 +0800   #访问时间不变</span><br><span class="line">Modify: 2017-09-13 15:07:15.034441767 +0800</span><br><span class="line">Change: 2017-09-13 15:07:15.034441767 +0800</span><br><span class="line"> Birth: -</span><br></pre></td></tr></table></figure></p>
 <p>说好的最后一次访问时间呢？<br>通过echo命令在a里加数据…<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@cloudhost ~]# echo &apos;welcome to echo &apos;&gt; a</span><br><span class="line">[root@cloudhost ~]# stat a</span><br><span class="line">  File: ‘a’</span><br><span class="line">  Size: 17        	Blocks: 8          IO Block: 4096   regular file</span><br><span class="line">Device: fd01h/64769d	Inode: 1557836     Links: 1</span><br><span class="line">Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)</span><br><span class="line">Access: 2017-09-13 15:07:39.892069721 +0800</span><br><span class="line">Modify: 2017-09-13 15:14:23.372029181 +0800   #修改文件内容，mtime改变</span><br><span class="line">Change: 2017-09-13 15:14:23.372029181 +0800   #文件size(属性)改变，ctime改变</span><br><span class="line"> Birth: -</span><br></pre></td></tr></table></figure></p>
@@ -624,8 +625,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/01/23/raid/" rel="next" title="RIAD工作原理">
-                <i class="fa fa-chevron-left"></i> RIAD工作原理
+              <a href="/2018/01/23/python面试题/" rel="next" title="Python面试题">
+                <i class="fa fa-chevron-left"></i> Python面试题
               </a>
             
           </div>
@@ -634,8 +635,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/01/23/python数据结构练习/" rel="prev" title="Python数据结构练习">
-                Python数据结构练习 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/01/25/fibonacci/" rel="prev" title="斐波那契数列">
+                斐波那契数列 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -892,7 +893,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux时间参数"><span class="nav-number">1.</span> <span class="nav-text">linux时间参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#尝试使用"><span class="nav-number">2.</span> <span class="nav-text">尝试使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#touch"><span class="nav-number">3.</span> <span class="nav-text">touch</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#linux时间参数atime-、mtime、ctime"><span class="nav-number">1.</span> <span class="nav-text">linux时间参数atime 、mtime、ctime</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#尝试使用"><span class="nav-number">2.</span> <span class="nav-text">尝试使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#touch"><span class="nav-number">3.</span> <span class="nav-text">touch</span></a></li></ol></div>
             
 
           </div>
