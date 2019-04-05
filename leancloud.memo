@@ -31,6 +31,7 @@
 {"title":"linux文件时间参数atime，ctime，mtime","url":"/2018/05/23/linux时间参数 /"},
 {"title":"Python面试题","url":"/2018/05/23/python面试题/"},
 {"title":"Linux脚本的执行方式解析","url":"/2018/06/23/shell_run/"},
+{"title":"./和. 执行脚本的执行方式解析","url":"/2018/06/23/shell_run/"},
 {"title":"shell编程总结","url":"/2018/06/23/shell_summary/"},
 {"title":"JavaScript经典的例子","url":"/2019/03/26/JavaScript实例/"},
 {"title":"Kubernetes基本概念","url":"/2019/03/26/Kubernetes_concepts/"},
