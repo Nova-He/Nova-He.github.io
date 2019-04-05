@@ -401,6 +401,245 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2018/02/27/derfer_pattern/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="博主">
+      <meta itemprop="description" content="学习 生活 记录">
+      <meta itemprop="image" content="/images/mapleleaf.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nova's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/02/27/derfer_pattern/" class="post-title-link" itemprop="url">defer模式</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+          
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-02-27 00:00:00" itemprop="dateCreated datePublished" datetime="2018-02-27T00:00:00+08:00">2018-02-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-27 19:20:59" itemprop="dateModified" datetime="2019-03-27T19:20:59+08:00">2019-03-27</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Golang/" itemprop="url" rel="index"><span itemprop="name">Golang</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2018/02/27/derfer_pattern/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/02/27/derfer_pattern/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2018/02/27/derfer_pattern/" class="leancloud_visitors" data-flag-title="defer模式">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Symbols count in article: </span>
+                
+                <span title="Symbols count in article">715</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">1 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>在golang中使用<code>defer</code>确保全部的资源正确的关闭，或者把不使用的资源返回到<code>pool</code>中，其次更重要的是从<code>panicing</code>中<code>recovering</code>。下面总结了所有使用这种模式的例子：</p>
+<ul>
+<li>关闭文件流</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// open a file f</span></span><br><span class="line"><span class="keyword">defer</span> f.Cloes()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>给加锁的资源解锁</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mu.lock()</span><br><span class="line"><span class="keyword">defer</span> mu.Unlock()</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/02/27/derfer_pattern/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2018/02/23/zabbix自定义key/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -819,6 +1058,254 @@
         
       
     </p></div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2018/01/23/container_list/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="博主">
+      <meta itemprop="description" content="学习 生活 记录">
+      <meta itemprop="image" content="/images/mapleleaf.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Nova's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2018/01/23/container_list/" class="post-title-link" itemprop="url">container/list实现</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+          
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-01-23 00:00:00" itemprop="dateCreated datePublished" datetime="2018-01-23T00:00:00+08:00">2018-01-23</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-27 19:21:52" itemprop="dateModified" datetime="2019-03-27T19:21:52+08:00">2019-03-27</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+              
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+            
+                <span class="post-meta-item-text">Comments: </span>
+                <a href="/2018/01/23/container_list/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/01/23/container_list/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+            <span id="/2018/01/23/container_list/" class="leancloud_visitors" data-flag-title="container/list实现">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Views: </span>
+              
+                <span class="leancloud-visitors-count"></span>
+            </span>
+          
+
+          
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Symbols count in article: </span>
+                
+                <span title="Symbols count in article">2.1k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Reading time &asymp;</span>
+                
+                <span title="Reading time">2 mins.</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>最近看到go源码里的<code>container/list</code>，实现双向循环列表，记录一下关键部分。</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li><code>循环链表（circular linked list）</code>将单链表中终端结点的指针端由空指针改为指向头结点，就使整个单链表形成一个环，这种头尾相接的单链表称为单循环链表，简称循环列表。</li>
+<li><code>双向链表（double linkedlist）</code> 在单链表的每个结点中，再设置一个指向其前驱结点的指针域。所以在双向链表中的结点都有两个指针域，一个指向直接后继，另一个指向直接前驱。</li>
+</ul>
+<p>双向循环列表就是二者的结合体，如图为非空的循环的带头结点的双向链表: </p>
+<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjby35qyj30w006zq3p.jpg" alt="非空的循环的带头结点的双向链表"></p>
+<p>在线性表中最实用的就是双向循环列表，Go语言中双向循环列表<code>container/list</code>:</p>
+<ul>
+<li>使用方法：<a href="https://golang.org/pkg/container/list/" target="_blank" rel="noopener">Package list</a></li>
+<li>源码: <a href="https://golang.org/src/container/list/list.go" target="_blank" rel="noopener">Source file src/container/list/list.go</a></li>
+</ul>
+<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><h4 id="节点结构体"><a href="#节点结构体" class="headerlink" title="节点结构体"></a>节点结构体</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Element is an element of a linked list.</span></span><br><span class="line"><span class="keyword">type</span> Element <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">//next and prev node of list </span></span><br><span class="line">	next, prev *Element</span><br><span class="line"></span><br><span class="line">	<span class="comment">// The list to which this element belongs.</span></span><br><span class="line">	list *List</span><br><span class="line"></span><br><span class="line">	<span class="comment">// The value stored with this element.</span></span><br><span class="line">	Value <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>要点：</p>
+<ul>
+<li>类似C语言中的空指针可以指向任何数据结构，空接口可以赋值任何数据结构。</li>
+<li>添加<code>list</code>指针，标识节点属于的<code>list</code>。</li>
+</ul>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/01/23/container_list/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
 
     
 
@@ -1333,237 +1820,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2018/01/23/linux时间参数/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="博主">
-      <meta itemprop="description" content="学习 生活 记录">
-      <meta itemprop="image" content="/images/mapleleaf.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Nova's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2018/01/23/linux时间参数/" class="post-title-link" itemprop="url">linux文件时间参数atime，ctime，mtime</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-          
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2018-01-23 00:00:00" itemprop="dateCreated datePublished" datetime="2018-01-23T00:00:00+08:00">2018-01-23</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-04-04 11:49:33" itemprop="dateModified" datetime="2019-04-04T11:49:33+08:00">2019-04-04</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">Comments: </span>
-                <a href="/2018/01/23/linux时间参数/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/01/23/linux时间参数/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-            <span id="/2018/01/23/linux时间参数/" class="leancloud_visitors" data-flag-title="linux文件时间参数atime，ctime，mtime">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Views: </span>
-              
-                <span class="leancloud-visitors-count"></span>
-            </span>
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Symbols count in article: </span>
-                
-                <span title="Symbols count in article">3.6k</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Reading time &asymp;</span>
-                
-                <span title="Reading time">3 mins.</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="linux时间参数atime-、mtime、ctime"><a href="#linux时间参数atime-、mtime、ctime" class="headerlink" title="linux时间参数atime 、mtime、ctime"></a>linux时间参数atime 、mtime、ctime</h3><p><code>Access（atime）</code>：访问时间，指文件最后一次被访问的时间；<br><code>Modify（mtime）</code>：修改时间，指文件内容最后一次被修改的时间。这里的文件内容指文件内的数据；<br><code>Change（ctime）</code>：状态修改时间，指文件的属性状态一次被修改的时，比如文件权限、所有者、大小等；<br>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/01/23/linux时间参数/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </p></div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2018/01/23/raid/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1796,7 +2052,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2018/01/23/container_list/">
+    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2018/01/23/linux时间参数/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="博主">
@@ -1816,7 +2072,7 @@
           <h1 class="post-title" itemprop="name headline">
                 
                 
-                <a href="/2018/01/23/container_list/" class="post-title-link" itemprop="url">container/list实现</a>
+                <a href="/2018/01/23/linux时间参数/" class="post-title-link" itemprop="url">linux文件时间参数atime，ctime，mtime</a>
               
             
           </h1>
@@ -1858,7 +2114,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-03-27 19:21:52" itemprop="dateModified" datetime="2019-03-27T19:21:52+08:00">2019-03-27</time>
+                <time title="Modified: 2019-04-04 11:49:33" itemprop="dateModified" datetime="2019-04-04T11:49:33+08:00">2019-04-04</time>
               
             
           </span>
@@ -1875,7 +2131,7 @@
                 <span class="post-meta-item-text">In</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
 
                 
                 
@@ -1894,8 +2150,8 @@
                 </span>
             
                 <span class="post-meta-item-text">Comments: </span>
-                <a href="/2018/01/23/container_list/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2018/01/23/container_list/" itemprop="commentCount"></span>
+                <a href="/2018/01/23/linux时间参数/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2018/01/23/linux时间参数/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1903,7 +2159,7 @@
 
           
           
-            <span id="/2018/01/23/container_list/" class="leancloud_visitors" data-flag-title="container/list实现">
+            <span id="/2018/01/23/linux时间参数/" class="leancloud_visitors" data-flag-title="linux文件时间参数atime，ctime，mtime">
               <span class="post-meta-divider">|</span>
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
@@ -1928,7 +2184,7 @@
                 
                   <span class="post-meta-item-text">Symbols count in article: </span>
                 
-                <span title="Symbols count in article">2.1k</span>
+                <span title="Symbols count in article">3.6k</span>
               
 
               
@@ -1942,7 +2198,7 @@
                 
                   <span class="post-meta-item-text">Reading time &asymp;</span>
                 
-                <span title="Reading time">2 mins.</span>
+                <span title="Reading time">3 mins.</span>
               
             </div>
           
@@ -1963,28 +2219,11 @@
 
       
         
-          <p>最近看到go源码里的<code>container/list</code>，实现双向循环列表，记录一下关键部分。</p>
-<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
-<li><code>循环链表（circular linked list）</code>将单链表中终端结点的指针端由空指针改为指向头结点，就使整个单链表形成一个环，这种头尾相接的单链表称为单循环链表，简称循环列表。</li>
-<li><code>双向链表（double linkedlist）</code> 在单链表的每个结点中，再设置一个指向其前驱结点的指针域。所以在双向链表中的结点都有两个指针域，一个指向直接后继，另一个指向直接前驱。</li>
-</ul>
-<p>双向循环列表就是二者的结合体，如图为非空的循环的带头结点的双向链表: </p>
-<p><img src="https://ws1.sinaimg.cn/large/006v3NJegy1g1gjby35qyj30w006zq3p.jpg" alt="非空的循环的带头结点的双向链表"></p>
-<p>在线性表中最实用的就是双向循环列表，Go语言中双向循环列表<code>container/list</code>:</p>
-<ul>
-<li>使用方法：<a href="https://golang.org/pkg/container/list/" target="_blank" rel="noopener">Package list</a></li>
-<li>源码: <a href="https://golang.org/src/container/list/list.go" target="_blank" rel="noopener">Source file src/container/list/list.go</a></li>
-</ul>
-<h3 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h3><h4 id="节点结构体"><a href="#节点结构体" class="headerlink" title="节点结构体"></a>节点结构体</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Element is an element of a linked list.</span></span><br><span class="line"><span class="keyword">type</span> Element <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">//next and prev node of list </span></span><br><span class="line">	next, prev *Element</span><br><span class="line"></span><br><span class="line">	<span class="comment">// The list to which this element belongs.</span></span><br><span class="line">	list *List</span><br><span class="line"></span><br><span class="line">	<span class="comment">// The value stored with this element.</span></span><br><span class="line">	Value <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>要点：</p>
-<ul>
-<li>类似C语言中的空指针可以指向任何数据结构，空接口可以赋值任何数据结构。</li>
-<li>添加<code>list</code>指针，标识节点属于的<code>list</code>。</li>
-</ul>
+          <h3 id="linux时间参数atime-、mtime、ctime"><a href="#linux时间参数atime-、mtime、ctime" class="headerlink" title="linux时间参数atime 、mtime、ctime"></a>linux时间参数atime 、mtime、ctime</h3><p><code>Access（atime）</code>：访问时间，指文件最后一次被访问的时间；<br><code>Modify（mtime）</code>：修改时间，指文件内容最后一次被修改的时间。这里的文件内容指文件内的数据；<br><code>Change（ctime）</code>：状态修改时间，指文件的属性状态一次被修改的时，比如文件权限、所有者、大小等；<br>
           <!--noindex-->
           
             <div class="post-button text-center">
-              <a class="btn" href="/2018/01/23/container_list/#more" rel="contents">
+              <a class="btn" href="/2018/01/23/linux时间参数/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -1992,7 +2231,7 @@
           <!--/noindex-->
         
       
-    </div>
+    </p></div>
 
     
 
@@ -2492,241 +2731,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://nova-he.github.io/2017/12/19/django_redirect_error_port/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="博主">
-      <meta itemprop="description" content="学习 生活 记录">
-      <meta itemprop="image" content="/images/mapleleaf.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Nova's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2017/12/19/django_redirect_error_port/" class="post-title-link" itemprop="url">Django使用redirect时重定向到错误端口</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-          
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2017-12-19 00:00:00" itemprop="dateCreated datePublished" datetime="2017-12-19T00:00:00+08:00">2017-12-19</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-03-27 19:21:10" itemprop="dateModified" datetime="2019-03-27T19:21:10+08:00">2019-03-27</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Django/" itemprop="url" rel="index"><span itemprop="name">Django</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-              
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-            
-                <span class="post-meta-item-text">Comments: </span>
-                <a href="/2017/12/19/django_redirect_error_port/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2017/12/19/django_redirect_error_port/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-            <span id="/2017/12/19/django_redirect_error_port/" class="leancloud_visitors" data-flag-title="Django使用redirect时重定向到错误端口">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Views: </span>
-              
-                <span class="leancloud-visitors-count"></span>
-            </span>
-          
-
-          
-
-          
-            <div class="post-symbolscount">
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Symbols count in article: </span>
-                
-                <span title="Symbols count in article">587</span>
-              
-
-              
-                <span class="post-meta-divider">|</span>
-              
-
-              
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-clock-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Reading time &asymp;</span>
-                
-                <span title="Reading time">1 mins.</span>
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>Django使用nginx非80端口做反代理，用<code>redirect()</code>或<code>HttpResponseRedirect()</code>进行url重定向时，会默认重定向到80端口。</p>
-<p>解决办法：</p>
-<p>当一个Django应用部署在代理或负载均衡器后面的时候，解决这个问题需要依赖 X-Forwarded-Host 报头提供转发地址。</p>
-<p>首先，添加下面字段到 nginx 的主机配置文件（插入到 location 部分），用于配置 nginx 发送出合适的报头：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">proxy_set_header X-Forwarded-Host $host:端口号;</span><br><span class="line"></span><br><span class="line"><span class="comment"># for instance</span></span><br><span class="line">proxy_set_header X-Forwarded-Host $host:<span class="number">8000</span>;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2017/12/19/django_redirect_error_port/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2775,7 +2779,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">33</span>
+                    <span class="site-state-item-count">34</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2972,7 +2976,7 @@
       <i class="fa fa-area-chart"></i>
     </span>
     
-    <span title="Symbols count total">119k</span>
+    <span title="Symbols count total">121k</span>
   
 
   
@@ -2981,7 +2985,7 @@
       <i class="fa fa-coffee"></i>
     </span>
     
-    <span title="Reading time total">1:49</span>
+    <span title="Reading time total">1:50</span>
   
 </div>
 
